@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-16 11:48:22
- * @LastEditTime: 2021-11-17 08:35:38
+ * @LastEditTime: 2021-11-17 09:22:04
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \flutter_dayjs\lib\dayjs.dart
@@ -56,7 +56,7 @@ class Dayfl {
     return _datetime;
   }
 
-  /// 获取时间搓 单位毫秒
+  /// 获取时间戳 单位毫秒
   int valueOf() {
     return _datetime.millisecondsSinceEpoch;
   }

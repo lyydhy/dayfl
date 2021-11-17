@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-16 18:48:03
- * @LastEditTime: 2021-11-16 18:48:04
+ * @LastEditTime: 2021-11-17 10:57:38
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \workProject\dayfl\lib\format.dart
@@ -34,41 +34,58 @@ class Format {
       return '$_year-${_fillZero(_month, 2)}-${_fillZero(_day, 2)} ${_fillZero(_hour, 2)}:${_fillZero(_minute, 2)}:$_sec';
     }
     String _newDate = formatStr;
-    if (RegExp(r"YYYY").hasMatch(formatStr)) {
-      _newDate = _newDate.replaceAll(r"YYYY", _year);
-    } else if (RegExp(r"YY").hasMatch(formatStr)) {
-      _newDate = _newDate.replaceAll(r"YY", _year.substring(2));
+
+    if (formatStr.contains("YYYY")) {
+      _newDate = _newDate.replaceAll("YYYY", _year);
+    } else if (formatStr.contains("YY")) {
+      _newDate = _newDate.replaceAll("YY", _year.substring(2));
     }
-    if (RegExp(r"MMM").hasMatch(formatStr)) {
+
+    if (formatStr.contains("MMM")) {
       _newDate =
-          _newDate.replaceAll(r"MMM", _monthToEnglishAbbreviations(_month));
-    } else if (RegExp(r"MM").hasMatch(formatStr)) {
-      _newDate = _newDate.replaceAll(r"MM", _fillZero(_month, 2));
-    } else if (RegExp(r"M").hasMatch(formatStr)) {
-      _newDate = _newDate.replaceAll(r"M", _month);
-    }
-    if (RegExp(r"DD").hasMatch(formatStr)) {
-      _newDate = _newDate.replaceAll(r"DD", _fillZero(_day, 2));
-    } else if (RegExp(r"D").hasMatch(formatStr)) {
-      _newDate = _newDate.replaceAll(r"D", _day);
+          _newDate.replaceAll("MMM", _monthToEnglishAbbreviations(_month));
+    } else if (formatStr.contains("MM")) {
+      _newDate = _newDate.replaceAll("MM", _fillZero(_month, 2));
+    } else if (formatStr.contains("M")) {
+      _newDate = _newDate.replaceAll("M", _month);
     }
 
-    if (RegExp(r"HH").hasMatch(formatStr)) {
-      _newDate = _newDate.replaceAll(r"HH", _fillZero(_hour, 2));
-    } else if (RegExp(r"H").hasMatch(formatStr)) {
-      _newDate = _newDate.replaceAll(r"H", _day);
+    if (formatStr.contains("DD")) {
+      _newDate = _newDate.replaceAll("DD", _fillZero(_day, 2));
+    } else if (formatStr.contains("D")) {
+      _newDate = _newDate.replaceAll("D", _day);
     }
 
-    if (RegExp(r"mm").hasMatch(formatStr)) {
-      _newDate = _newDate.replaceAll(r"mm", _fillZero(_minute, 2));
-    } else if (RegExp(r"m").hasMatch(formatStr)) {
-      _newDate = _newDate.replaceAll(r"m", _minute);
+    if (formatStr.contains("HH")) {
+      _newDate = _newDate.replaceAll("HH", _fillZero(_hour, 2));
+    } else if (formatStr.contains("H")) {
+      _newDate = _newDate.replaceAll("H", _hour);
+    } else if (formatStr.contains("hh")) {
+      int _h = int.parse(_hour);
+      _h = _h > 12 ? _h - 12 : _h;
+      _newDate = _newDate.replaceAll("hh", _fillZero(_h.toString(), 2));
+    } else if (formatStr.contains("h")) {
+      int _h = int.parse(_hour);
+      _h = _h > 12 ? _h - 12 : _h;
+      _newDate = _newDate.replaceAll("h", _h.toString());
     }
 
-    if (RegExp(r"ss").hasMatch(formatStr)) {
-      _newDate = _newDate.replaceAll(r"ss", _fillZero(_sec, 2));
-    } else if (RegExp(r"s").hasMatch(formatStr)) {
-      _newDate = _newDate.replaceAll(r"s", _sec);
+    if (formatStr.contains("mm")) {
+      _newDate = _newDate.replaceAll("mm", _fillZero(_minute, 2));
+    } else if (formatStr.contains("m")) {
+      _newDate = _newDate.replaceAll("m", _minute);
+    }
+
+    if (formatStr.contains("ss")) {
+      _newDate = _newDate.replaceAll("ss", _fillZero(_sec, 2));
+    } else if (formatStr.contains("s")) {
+      _newDate = _newDate.replaceAll("s", _sec);
+    }
+
+    if (formatStr.contains("A")) {
+      _newDate = _newDate.replaceAll("A", int.parse(_hour) <= 12 ? 'AM' : 'PM');
+    } else if (formatStr.contains("a")) {
+      _newDate = _newDate.replaceAll("a", int.parse(_hour) <= 12 ? 'am' : 'pm');
     }
 
     return _newDate;
