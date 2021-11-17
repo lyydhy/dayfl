@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-16 11:48:22
- * @LastEditTime: 2021-11-16 18:49:10
+ * @LastEditTime: 2021-11-17 08:35:38
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \flutter_dayjs\lib\dayjs.dart
@@ -72,13 +72,13 @@ class Dayfl {
   /// 添加日期
   Dayfl add(Duration duration) {
     _datetime = _datetime.add(duration);
-    return Dayfl(_datetime);
+    return this;
   }
 
   /// 减去日期
   Dayfl subtract(Duration duration) {
     _datetime.subtract(duration);
-    return Dayfl(_datetime);
+    return this;
   }
 
   /// 时间差 两个时间相差 小时数
