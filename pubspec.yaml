@@ -1,6 +1,6 @@
 name: dayfl
 description: 借鉴dayjs 自己写的自己使用的一个flutter日期格式化工具
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/lyydhy/dayfl
 
 environment:
