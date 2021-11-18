@@ -1,6 +1,6 @@
 name: dayfl
 description: Borrow a flutter date formatting tool written by Dayjs himself for his own use
-version: 0.0.5
+version: 0.0.6
 homepage: https://github.com/lyydhy/dayfl
 
 environment:
@@ -9,6 +9,8 @@ environment:
 
 dependencies:
   flutter:
+    sdk: flutter
+  flutter_web_plugins:
     sdk: flutter
 
 dev_dependencies:
@@ -30,6 +32,11 @@ flutter:
       android:
         package: com.plugin.dayfl
         pluginClass: DayflPlugin
+      ios:
+        pluginClass: DayflPlugin
+      web:
+        pluginClass: DayflWeb
+        fileName: dayfl_web.dart
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

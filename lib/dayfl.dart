@@ -1,3 +1,4 @@
+/// Dayfl
 import 'format.dart';
 import 'location.dart';
 
@@ -43,7 +44,7 @@ class Dayfl {
   // ignore: prefer_final_fields
   static Map<String, MatchersFunc> _matcherstatic = {};
 
-  /// [datetime] 支持传入格式  Dayfl|String|int|DateTime
+  /// [datetime] 支持传入格式  Dayfl | String | int | DateTime
   ///
   /// [formatStr] datetime 传入字符串的时候 可以传入的解析格式字符串
   Dayfl([var datetime, String formatStr = '']) {
@@ -57,7 +58,7 @@ class Dayfl {
 
   /// 之前
   ///
-  /// [date] 接收时间可以是 Dayfl|时间字符串|DateTime  两者都不是 return false;
+  /// [date] 接收时间可以是 Dayfl | 时间字符串 | DateTime  两者都不是 return false;
   bool isBefore(var date) {
     if (date is Dayfl) {
       return _datetime.isBefore(date.getDateTime());
