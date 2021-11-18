@@ -1,17 +1,14 @@
-/*
- * @Author: your name
- * @Date: 2021-11-16 18:48:03
- * @LastEditTime: 2021-11-17 18:33:27
- * @LastEditors: Please set LastEditors
- * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- * @FilePath: \workProject\dayfl\lib\format.dart
- */
+/// 解析类
 import 'location.dart';
 
 class Format {
+  /// 时间字符串
   String timeStr = '';
+  /// 解析格式字符串
   String formatStr = '';
+  /// datetime
   late DateTime _dateTime = DateTime.now();
+
   Format({this.timeStr = '', this.formatStr = '', var date}) {
     if (date != null && date is DateTime) {
       _dateTime = date;
@@ -20,6 +17,7 @@ class Format {
     }
   }
 
+  /// 返回dateTime
   DateTime getDateTime() {
     return _dateTime;
   }

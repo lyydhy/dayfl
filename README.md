@@ -1,25 +1,40 @@
 # dayfl
 
-借鉴 dayjs 自己写的自己使用的一个 flutter 日期格式化工具
+借鉴 [dayjs](https://github.com/iamkun/dayjs) 自己写的自己使用的一个 flutter 日期格式化工具
 
-格式化功能 和 dayjs 一样
+格式化功能 和 [dayjs](https://github.com/iamkun/dayjs) 一样
 
+可能有性能问题 大型项目慎用！ 主要技术不加，欢迎大佬提供一键
+
+[dayjs](https://github.com/iamkun/dayjs)的插件功能 用 dart extension 代替吧
 
 # 示例
 
 ```dart
     // 参数1  接收 DateTime 和 int  和 String- 须符合DateTime.parse()
     // 参数2  当String 不符合DateTime.parse()的时候 传入你日期格式化字符串
-    dayfl(参数1， 参数2)
+    Dayfl(参数1， 参数2)
 
-    dayfl().format(格式化字符串)
+    Dayfl().format(格式化字符串)
     // 无参时 默认当前时间 格式为 YYYY-MM-DD HH:mm:ss
     // 其他格式参照下面表格
 
+    // 新增格式化参数
+    // 参数key 类似于 YYYY MM DD
+    Dayfl.addMatchers(参数key, (
+        datetime, {
+        String year = '',
+        String month = '',
+        String day = '',
+        String hour = '',
+        String minute = '',
+        String second = '',
+    }) {
+        return 参数key 对应 的值;
+    })
 ```
 
 ### 当前时间没得验证功能 请传入的时间字符串是个有效的字符串 不然会报错的
-
 
 # 格式化字符串参数
 

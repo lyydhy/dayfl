@@ -1,24 +1,51 @@
-/*
- * @Author: your name
- * @Date: 2021-11-16 11:48:22
- * @LastEditTime: 2021-11-17 18:31:33
- * @LastEditors: Please set LastEditors
- * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- * @FilePath: \flutter_dayjs\lib\dayjs.dart
- */
-
 import 'format.dart';
 import 'location.dart';
 
+// typedef pluginFunc = void Function(Dayfl dayfl);
+
+/// 回调
+typedef MatchersFunc = String Function(
+  DateTime datetime, {
+  String year,
+  String month,
+  String day,
+  String hour,
+  String minute,
+  String second,
+});
+
 class Dayfl {
+  /// datetime
   late DateTime _datetime;
+
+  /// 年
   String _year = '';
+
+  /// 月
   String _month = '';
+
+  /// 日
   String _day = '';
+
+  /// 小时
   String _hour = '';
+
+  /// 分钟
   String _minute = '';
+
+  /// 秒
   String _sec = '';
+
+  /// 格式化对象
   Map<String, String> _matchers = {};
+
+  ///
+  // ignore: prefer_final_fields
+  static Map<String, MatchersFunc> _matcherstatic = {};
+
+  /// [datetime] 支持传入格式  Dayfl|String|int|DateTime
+  ///
+  /// [formatStr] datetime 传入字符串的时候 可以传入的解析格式字符串
   Dayfl([var datetime, String formatStr = '']) {
     _object(datetime, formatStr);
   }
@@ -69,7 +96,7 @@ class Dayfl {
 
   /// 格式化
   String format([String formatStr = Location.defaultFormatStr]) {
-    return formatStr.replaceAllMapped(Location.regexFormat, (match) {
+    String s = formatStr.replaceAllMapped(Location.regexFormat, (match) {
       if (match.groupCount > -1) {
         String v = match.group(0).toString();
         if (_matchers[v] != null) {
@@ -78,6 +105,12 @@ class Dayfl {
       }
       return '';
     });
+    if (_matcherstatic.isNotEmpty) {
+      _matcherstatic.forEach((key, value) {
+        s = s.replaceAll(key, _matchers[key].toString());
+      });
+    }
+    return s;
   }
 
   /// 添加日期
@@ -105,9 +138,11 @@ class Dayfl {
     }
   }
 
-  // 类型推断
+  /// 类型推断
   void _object(var datetime, [String formatStr = '']) {
-    if (datetime is String) {
+    if (datetime is Dayfl) {
+      _datetime = datetime.getDateTime();
+    } else if (datetime is String) {
       _datetime = Format(timeStr: datetime, formatStr: formatStr).getDateTime();
     } else if (datetime is DateTime) {
       _datetime = datetime;
@@ -119,6 +154,7 @@ class Dayfl {
     _init();
   }
 
+  /// 初始化
   void _init() {
     _year = _datetime.year.toString();
     _month = _datetime.month.toString();
@@ -148,9 +184,26 @@ class Dayfl {
       "A": int.parse(_hour) <= 12 ? 'AM' : 'PM',
       "a": int.parse(_hour) <= 12 ? 'am' : 'pm',
     };
+
+    if (_matcherstatic.isNotEmpty) {
+      _matcherstatic.forEach((key, value) {
+        Map<String, String> _m = {
+          key: value(
+            _datetime,
+            year: _year,
+            month: _month,
+            day: _day,
+            hour: _hour,
+            minute: _minute,
+            second: _sec,
+          ),
+        };
+        _matchers.addAll(_m);
+      });
+    }
   }
 
-  // 根据长度补零
+  /// 根据长度补零
   String _fillZero(String str, int length) {
     if (str.length == length) {
       return str;
@@ -161,5 +214,15 @@ class Dayfl {
     }
 
     return _zero + str;
+  }
+
+  /// 新增格式化参数
+  ///
+  /// [key] 参数key值 类似于 YYYY MM DD
+  ///
+  /// [matchersFunc] 回调方法 传入可执行的方法  返回 String
+  static void addMatchers(String key, MatchersFunc matchersFunc) {
+    Map<String, MatchersFunc> _m = {key: matchersFunc};
+    _matcherstatic.addAll(_m);
   }
 }

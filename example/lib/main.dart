@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-16 18:47:01
- * @LastEditTime: 2021-11-17 18:30:42
+ * @LastEditTime: 2021-11-18 11:28:13
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \dayfl\example\lib\main.dart
@@ -21,9 +21,23 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  // Dayfl d = Dayfl().extend();
+  String customFormatParse(
+    datetime, {
+    String year = '',
+    String month = '',
+    String day = '',
+    String hour = '',
+    String minute = '',
+    String second = '',
+  }) {
+    return year;
+  }
+
   @override
   void initState() {
     super.initState();
+    Dayfl.addMatchers('BB', customFormatParse);
   }
 
   @override
@@ -41,7 +55,7 @@ class _MyAppState extends State<MyApp> {
             Text("当前时间 :${Dayfl().format()}"),
             Text("当前时间 :${Dayfl('2021-06-07').format('DD/MM/YYYY HH:mm:ss')}"),
             Text(
-                "指定时间 :${Dayfl('2022-01-06').add(const Duration(days: 2)).format('YYYY-MM-DD HH:mm:ss')}"),
+                "指定时间 :${Dayfl('2022-01-06').add(const Duration(days: 2)).format('YYYY-MM-BB HH:mm:ss')}"),
             Text(
                 "指定时间 :${Dayfl('26\\1/06 12:05:1', 'YY-M-DD HH:mm:s').format('YYYY-MM-DD H:m:s')}"),
             Text(
