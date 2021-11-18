@@ -4,8 +4,10 @@ import 'location.dart';
 class Format {
   /// 时间字符串
   String timeStr = '';
+
   /// 解析格式字符串
   String formatStr = '';
+
   /// datetime
   late DateTime _dateTime = DateTime.now();
 
