@@ -58,7 +58,7 @@ class Dayfl {
 
   /// 之前
   ///
-  /// [date] 接收时间可以是 Dayfl | 时间字符串 | DateTime  两者都不是 return false;
+  /// [date] 接收时间可以是 Dayfl | 时间字符串 | DateTime  三者都不是 return false;
   bool isBefore(var date) {
     if (date is Dayfl) {
       return _datetime.isBefore(date.getDateTime());
@@ -72,7 +72,7 @@ class Dayfl {
 
   /// 之后
   ///
-  /// [date] 接收时间可以是 Dayfl|时间字符串|DateTime 两者都不是 return false;
+  /// [date] 接收时间可以是 Dayfl|时间字符串|DateTime 三者都不是 return false;
   bool isAfter(var date) {
     if (date is Dayfl) {
       return _datetime.isAfter(date.getDateTime());
@@ -115,12 +115,16 @@ class Dayfl {
   }
 
   /// 添加日期
+  ///
+  /// [duration] 示例 Duration(days: 1)
   Dayfl add(Duration duration) {
     _datetime = _datetime.add(duration);
     return this;
   }
 
   /// 减去日期
+  ///
+  /// [duration] 示例 Duration(days: 1)
   Dayfl subtract(Duration duration) {
     _datetime.subtract(duration);
     return this;
@@ -136,6 +140,22 @@ class Dayfl {
       return _datetime.difference(date);
     } else {
       return const Duration(hours: 0);
+    }
+  }
+
+  /// isUtc
+  bool isUtc() {
+    return _datetime.isUtc;
+  }
+
+  /// 和DateTime 的 compareTo 方法一样
+  ///
+  /// [date] 必须是  Dayfl 或者 DateTime
+  int compareTo(var date) {
+    if (date is Dayfl) {
+      return _datetime.compareTo(date.getDateTime());
+    } else {
+      return _datetime.compareTo(date);
     }
   }
 
@@ -225,5 +245,14 @@ class Dayfl {
   static void addMatchers(String key, MatchersFunc matchersFunc) {
     Map<String, MatchersFunc> _m = {key: matchersFunc};
     _matcherstatic.addAll(_m);
+  }
+
+  /// 删除自定添加的格式化参数
+  ///
+  /// [key] 参数key值  自己在addMatchers时添加的
+  static void delMatchers(String key) {
+    if (_matcherstatic.containsKey(key)) {
+      _matcherstatic.remove(key);
+    }
   }
 }
