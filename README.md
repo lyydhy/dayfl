@@ -4,7 +4,7 @@
 
 格式化功能 和 [dayjs](https://github.com/iamkun/dayjs) 一样
 
-可能有性能问题 大型项目慎用！ 主要技术不加，欢迎大佬提供一键
+可能有性能问题 大型项目慎用！ 主要技术不加，欢迎大佬提供意见修改
 
 [dayjs](https://github.com/iamkun/dayjs)的插件功能 用 dart extension 代替吧
 
