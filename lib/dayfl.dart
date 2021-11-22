@@ -5,15 +5,7 @@ import 'location.dart';
 // typedef pluginFunc = void Function(Dayfl dayfl);
 
 /// 回调
-typedef MatchersFunc = String Function(
-  DateTime datetime, {
-  String year,
-  String month,
-  String day,
-  String hour,
-  String minute,
-  String second,
-});
+typedef MatchersFunc = String Function(Dayfl dayfl);
 
 class Dayfl {
   /// datetime
@@ -40,7 +32,7 @@ class Dayfl {
   /// 格式化对象
   Map<String, String> _matchers = {};
 
-  ///
+  /// 新增格式map
   // ignore: prefer_final_fields
   static Map<String, MatchersFunc> _matcherstatic = {};
 
@@ -61,11 +53,11 @@ class Dayfl {
   /// [date] 接收时间可以是 Dayfl | 时间字符串 | DateTime  三者都不是 return false;
   bool isBefore(var date) {
     if (date is Dayfl) {
-      return _datetime.isBefore(date.getDateTime());
+      return _datetime.isBefore(date.dateTime);
     } else if (date is DateTime) {
       return _datetime.isBefore(date);
     } else if (date is String) {
-      return _datetime.isBefore(Dayfl(date).getDateTime());
+      return _datetime.isBefore(Dayfl(date).dateTime);
     }
     return false;
   }
@@ -75,19 +67,14 @@ class Dayfl {
   /// [date] 接收时间可以是 Dayfl|时间字符串|DateTime 三者都不是 return false;
   bool isAfter(var date) {
     if (date is Dayfl) {
-      return _datetime.isAfter(date.getDateTime());
+      return _datetime.isAfter(date.dateTime);
     } else if (date is DateTime) {
       return _datetime.isAfter(date);
     } else if (date is String) {
-      return _datetime.isAfter(Dayfl(date).getDateTime());
+      return _datetime.isAfter(Dayfl(date).dateTime);
     }
 
     return false;
-  }
-
-  /// 获取时间 返回 DateTime
-  DateTime getDateTime() {
-    return _datetime;
   }
 
   /// 获取时间戳 单位毫秒
@@ -135,7 +122,7 @@ class Dayfl {
   /// [date] 必须是  Dayfl 或者 DateTime
   Duration difference(var date) {
     if (date is Dayfl) {
-      return _datetime.difference(date.getDateTime());
+      return _datetime.difference(date.dateTime);
     } else if (date is DateTime) {
       return _datetime.difference(date);
     } else {
@@ -153,7 +140,7 @@ class Dayfl {
   /// [date] 必须是  Dayfl 或者 DateTime
   int compareTo(var date) {
     if (date is Dayfl) {
-      return _datetime.compareTo(date.getDateTime());
+      return _datetime.compareTo(date.dateTime);
     } else {
       return _datetime.compareTo(date);
     }
@@ -162,9 +149,9 @@ class Dayfl {
   /// 类型推断
   void _object(var datetime, [String formatStr = '']) {
     if (datetime is Dayfl) {
-      _datetime = datetime.getDateTime();
+      _datetime = datetime.dateTime;
     } else if (datetime is String) {
-      _datetime = Format(timeStr: datetime, formatStr: formatStr).getDateTime();
+      _datetime = Format(timeStr: datetime, formatStr: formatStr).dateTime;
     } else if (datetime is DateTime) {
       _datetime = datetime;
     } else if (datetime is int) {
@@ -209,17 +196,11 @@ class Dayfl {
     if (_matcherstatic.isNotEmpty) {
       _matcherstatic.forEach((key, value) {
         Map<String, String> _m = {
-          key: value(
-            _datetime,
-            year: _year,
-            month: _month,
-            day: _day,
-            hour: _hour,
-            minute: _minute,
-            second: _sec,
-          ),
+          key: value(this),
         };
-        _matchers.addAll(_m);
+        if (!_matchers.containsKey(key)) {
+          _matchers.addAll(_m);
+        }
       });
     }
   }
@@ -244,6 +225,9 @@ class Dayfl {
   /// [matchersFunc] 回调方法 传入可执行的方法  返回 String
   static void addMatchers(String key, MatchersFunc matchersFunc) {
     Map<String, MatchersFunc> _m = {key: matchersFunc};
+    if (_matcherstatic.containsKey(key)) {
+      _matcherstatic.remove(key);
+    }
     _matcherstatic.addAll(_m);
   }
 
@@ -255,4 +239,25 @@ class Dayfl {
       _matcherstatic.remove(key);
     }
   }
+
+  /// 获取时间 返回 DateTime
+  DateTime get dateTime => _datetime;
+
+  /// 获取年 String
+  String get year => _year;
+
+  /// 获取月 String
+  String get month => _month;
+
+  /// 获取日 String
+  String get day => _day;
+
+  /// 获取小时 String
+  String get hour => _hour;
+
+  /// 获取分钟 String
+  String get minute => _minute;
+
+  /// 获取秒 String
+  String get second => _sec;
 }
