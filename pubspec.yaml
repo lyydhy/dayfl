@@ -1,6 +1,6 @@
 name: dayfl
 description: Borrow a flutter date formatting tool written by Dayjs himself for his own use
-version: 0.0.7
+version: 0.0.8
 homepage: https://github.com/lyydhy/dayfl
 
 environment:

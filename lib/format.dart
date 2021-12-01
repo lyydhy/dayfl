@@ -15,7 +15,7 @@ class Format {
   Format({this.timeStr = '', this.formatStr = '', var date}) {
     if (date != null && date is DateTime) {
       _dateTime = date;
-    } else if (formatStr.isNotEmpty && formatStr != '') {
+    } else {
       _fetchDateTime();
     }
   }
@@ -88,37 +88,38 @@ class Format {
     } else {
       // 没得格式化字符串
       List<RegExpMatch> d = Location.regexParse.allMatches(timeStr).toList();
+
       if (d.isNotEmpty) {
         int m = 0;
-        if (d[2].group(0) != null) {
-          m = int.parse(d[2].group(0).toString()) - 1;
+        if (d[0].group(2) != null) {
+          m = int.parse(d[0].group(2).toString());
         }
+
         String ms = "0";
-        if (d[7].group(0) != null) {
-          ms = d[7].group(0).toString().substring(0, 3);
+        if (d[0].group(7) != null) {
+          ms = d[0].group(7).toString().substring(0, 3);
         }
-        int _y = int.parse(d[1].group(0).toString());
+        int _y = int.parse(d[0].group(1).toString());
         // ignore: non_constant_identifier_names
         int _D = 1;
-        if (d[3].group(0) != null) {
-          _D = int.parse(d[3].group(0).toString());
+        if (d[0].group(3) != null) {
+          _D = int.parse(d[0].group(3).toString());
         }
         // ignore: non_constant_identifier_names
         int _H = 0;
-        if (d[4].group(0) != null) {
-          _H = int.parse(d[4].group(0).toString());
+        if (d[0].group(4) != null) {
+          _H = int.parse(d[0].group(4).toString());
         }
         int _m = 0;
-        if (d[5].group(0) != null) {
-          _m = int.parse(d[5].group(0).toString());
+        if (d[0].group(5) != null) {
+          _m = int.parse(d[0].group(5).toString());
         }
         int _s = 0;
-        if (d[6].group(0) != null) {
-          _s = int.parse(d[6].group(0).toString());
+        if (d[0].group(6) != null) {
+          _s = int.parse(d[0].group(6).toString());
         }
         _dateTime = DateTime(_y, m, _D, _H, _m, _s, int.parse(ms));
       }
-      // _dateTime = DateTime.now();
     }
   }
 }

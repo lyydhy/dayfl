@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> {
             Text(
                 "指定时间 :${Dayfl('2022-01-06').add(const Duration(days: 2)).format('YYYY-MM-BB HH:mm:ss')}"),
             Text(
-                "指定时间 :${Dayfl('26\\1/06 12:05:1', 'YY-M-DD HH:mm:s').format('YYYY-MM-DD H:m:s')}"),
+                "指定时间 :${Dayfl('2021-11-13 09:54:20').format('YYYY-MM-DD H:m:s')}"),
             Text(
                 "指定时间 :${Dayfl('26\\1/06 13:05:1', 'YY-M-DD HH:mm:s').format('YYYY-MM-DD a h:m:s')}"),
           ],
