@@ -9,15 +9,11 @@ class Format {
   String formatStr = '';
 
   /// datetime
-  late DateTime _dateTime = DateTime.now();
+  late DateTime _dateTime;
 
   /// 构造方法
-  Format({this.timeStr = '', this.formatStr = '', var date}) {
-    if (date != null && date is DateTime) {
-      _dateTime = date;
-    } else {
-      _fetchDateTime();
-    }
+  Format({this.timeStr = '', this.formatStr = ''}) {
+    _fetchDateTime();
   }
 
   /// 返回dateTime
