@@ -100,6 +100,7 @@ class Format {
         int _D = 1;
         if (d[0].group(3) != null) {
           _D = int.parse(d[0].group(3).toString());
+          // print(_D);
         }
         // ignore: non_constant_identifier_names
         int _H = 0;
@@ -114,6 +115,7 @@ class Format {
         if (d[0].group(6) != null) {
           _s = int.parse(d[0].group(6).toString());
         }
+
         _dateTime = DateTime(_y, m, _D, _H, _m, _s, int.parse(ms));
       }
     }

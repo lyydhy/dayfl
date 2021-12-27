@@ -29,8 +29,43 @@ class Dayfl {
   /// 秒
   String _sec = '';
 
+  /// locale
+  static String _localeName = 'cn';
+
   /// 格式化对象
   Map<String, String> _matchers = {};
+
+  /// 语言数组 默认中文
+  static final List<Locale> _locales = [
+    Locale(
+      name: 'cn',
+      monthStart: 0,
+      monthAbbreviations: [
+        '一月',
+        '二月',
+        '三月',
+        '四月',
+        '五月',
+        '六月',
+        '七月',
+        '八月',
+        '九月',
+        '十月',
+        '十一月',
+        '十二月',
+      ],
+      weekStart: 0,
+      weekAbbreviations: [
+        '星期一',
+        '星期二',
+        '星期三',
+        '星期四',
+        '星期五',
+        '星期六',
+        '星期日',
+      ],
+    ),
+  ];
 
   /// 新增格式map
   // ignore: prefer_final_fields
@@ -46,6 +81,7 @@ class Dayfl {
   // 设置秒数
   // void second(int num) {
   //   if (num > 60 || num < 0) return;
+  //   _set(DateLocationEnum.sec, num, operation)
   // }
 
   /// 之前
@@ -83,7 +119,33 @@ class Dayfl {
   }
 
   /// 格式化
-  String format([String formatStr = Location.defaultFormatStr]) {
+  ///
+  /// [formatStr] 格式化字符串
+  ///
+  /// [locale] 语言包
+  String format([
+    String formatStr = Location.defaultFormatStr,
+    String locale = '',
+  ]) {
+    if (locale == '') {
+      locale = _localeName;
+    }
+    Locale _locale = getLocale(locale);
+    if (!_matchers.containsKey("W")) {
+      _matchers.addAll({
+        "W": getWeek(locale)['num'].toString(),
+        "WW": getWeek(locale)['text'],
+      });
+    }
+    if (!_matchers.containsKey("MMM")) {
+      if (_locale.monthStart == 0) {
+        _matchers
+            .addAll({"MMM": _locale.monthAbbreviations[int.parse(_month) - 1]});
+      } else if (_locale.monthStart == 1) {
+        _matchers
+            .addAll({"MMM": _locale.monthAbbreviations[int.parse(_month)]});
+      }
+    }
     String s = formatStr.replaceAllMapped(Location.regexFormat, (match) {
       if (match.groupCount > -1) {
         String v = match.group(0).toString();
@@ -103,18 +165,129 @@ class Dayfl {
 
   /// 添加日期
   ///
-  /// [duration] 示例 Duration(days: 1)
-  Dayfl add(Duration duration) {
-    _datetime = _datetime.add(duration);
+  /// [type] 操作对象
+  ///
+  /// [num] 操作数值
+  Dayfl add(DateLocationEnum type, int num) {
+    _datetime = _set(type, num, 1);
+    _init();
     return this;
   }
 
   /// 减去日期
   ///
-  /// [duration] 示例 Duration(days: 1)
-  Dayfl subtract(Duration duration) {
-    _datetime.subtract(duration);
+  /// [type] 操作对象
+  ///
+  /// [num] 操作数值
+  Dayfl subtract(DateLocationEnum type, int num) {
+    _datetime = _set(type, num, 0);
+    _init();
     return this;
+  }
+
+  /// 日期加减操作
+  DateTime _set(DateLocationEnum type, int num, int operation) {
+    if (type == DateLocationEnum.year) {
+      int _y = int.parse(_year);
+      if (operation == 1) {
+        _year = (_y + 1).toString();
+      } else {
+        _year = (_y - 1).toString();
+      }
+    } else if (type == DateLocationEnum.month) {
+      int _y = int.parse(_year);
+      int _m = int.parse(_month);
+      if (operation == 1) {
+        _month = "${_m + num}";
+        if (_m + num > 12) {
+          int _b = 12 - _m;
+          int _a = num - _b;
+          _month = _a.toString();
+          _year = (_y + 1).toString();
+        }
+      } else {
+        _month = "${_m - num}";
+        if (_m - num <= 0) {
+          int _b = num - _m;
+          int _a = 12 - _b;
+          _month = "$_a";
+          _year = (_y - 1).toString();
+        }
+      }
+    } else if (type == DateLocationEnum.day ||
+        type == DateLocationEnum.hour ||
+        type == DateLocationEnum.minute ||
+        type == DateLocationEnum.sec) {
+      DateTime _d;
+      if (type == DateLocationEnum.day) {
+        if (operation == 1) {
+          _d = dateTime.add(Duration(days: num));
+        } else {
+          _d = dateTime.subtract(Duration(days: num));
+        }
+      } else if (type == DateLocationEnum.hour) {
+        if (operation == 1) {
+          _d = dateTime.add(Duration(hours: num));
+        } else {
+          _d = dateTime.subtract(Duration(hours: num));
+        }
+      } else if (type == DateLocationEnum.minute) {
+        if (operation == 1) {
+          _d = dateTime.add(Duration(minutes: num));
+        } else {
+          _d = dateTime.subtract(Duration(minutes: num));
+        }
+      } else if (type == DateLocationEnum.sec) {
+        if (operation == 1) {
+          _d = dateTime.add(Duration(seconds: num));
+        } else {
+          _d = dateTime.subtract(Duration(seconds: num));
+        }
+      } else {
+        _d = DateTime.now();
+      }
+
+      _year = _d.year.toString();
+      _month = _d.month.toString();
+      _day = _d.day.toString();
+      _hour = _d.hour.toString();
+      _minute = _d.minute.toString();
+      _sec = _d.second.toString();
+    }
+    return Dayfl("$_year-$_month-$_day $_hour:$_minute:$_sec").dateTime;
+  }
+
+  /// 判断日期是否相同
+  ///
+  /// [dayfl] 比较的对象
+  ///
+  /// [type] 比较粒度单位 默认毫秒
+  bool isSame(
+    Dayfl dayfl, [
+    DateLocationEnum type = DateLocationEnum.millisecondsSinceEpoch,
+  ]) {
+    bool _y = dayfl.year == _year;
+    bool _mo = dayfl.month == _month;
+    bool _d = dayfl.day == _day;
+    bool _h = dayfl.hour == _hour;
+    bool _m = dayfl.minute == _minute;
+    bool _s = dayfl.second == _sec;
+
+    if (type == DateLocationEnum.year) {
+      return _y;
+    } else if (type == DateLocationEnum.month) {
+      return _y && _mo;
+    } else if (type == DateLocationEnum.day) {
+      return _y && _mo && _d;
+    } else if (type == DateLocationEnum.hour) {
+      return _y && _mo && _d && _h;
+    } else if (type == DateLocationEnum.minute) {
+      return _y && _mo && _d && _h && _m;
+    } else if (type == DateLocationEnum.sec) {
+      return _y && _mo && _d && _h && _m && _s;
+    } else {
+      return dayfl.dateTime == _datetime;
+    }
   }
 
   /// 时间差 两个时间相差 小时数
@@ -172,13 +345,11 @@ class Dayfl {
     _sec = _datetime.second.toString();
     int _h = int.parse(_hour);
     _h = _h > 12 ? _h - 12 : _h;
-
     _matchers = {
       "YY": _year.substring(2),
       "YYYY": _year,
       "M": _month,
       "MM": _fillZero(_month, 2),
-      "MMM": Location.monthToEnglishAbbreviations()[int.parse(_month)],
       "D": _day,
       "DD": _fillZero(_day, 2),
       "H": _hour,
@@ -214,7 +385,6 @@ class Dayfl {
     for (int i = 0; i < length - str.length; i++) {
       _zero += '0';
     }
-
     return _zero + str;
   }
 
@@ -240,6 +410,71 @@ class Dayfl {
     }
   }
 
+  /// 判断是否是Dayfl
+  static bool isDayfl(dynamic arg) {
+    return arg is Dayfl;
+  }
+
+  /// 是否是闰年
+  bool isLeapYear() {
+    int _y = int.parse(_year);
+    if (_y % 400 == 0 || (_y % 4 == 0 && _y % 100 != 0)) return true;
+    return false;
+  }
+
+  /// 获取当前日期月份天数
+  int daysInMonth() {
+    int _m = int.parse(_month);
+    int _y = int.parse(_year);
+    int _m1 = _m + 1;
+    if (_m + 1 > 12) {
+      _m1 = 1;
+      _y += 1;
+    }
+    Dayfl endTime = Dayfl("$_y-$_m1-1");
+    Dayfl startTime = Dayfl("$_year-$_month-1");
+    double days = (endTime.dateTime.millisecondsSinceEpoch -
+            startTime.dateTime.millisecondsSinceEpoch) /
+        (1000 * 60 * 60 * 24);
+    return days.toInt();
+  }
+
+  /// 获取week
+  ///
+  /// return Map num, text
+  Map<String, dynamic> getWeek([String locale = '']) {
+    Map<String, dynamic> map = {'num': null, 'text': ''};
+    map['num'] = _datetime.weekday;
+    Locale d = getLocale(locale);
+    if (d.weekStart == 0) {
+      map['text'] = d.weekAbbreviations[_datetime.weekday - 1];
+    } else if (d.weekStart == 1) {
+      map['text'] = d.weekAbbreviations[_datetime.weekday];
+    }
+    return map;
+  }
+
+  /// 添加语言
+  ///
+  /// [arg] 语言类
+  static addLocale(Locale arg) {
+    _locales.add(arg);
+  }
+
+  /// 获取当前使用语言包
+  Locale getLocale([String name = '']) {
+    String lname = name;
+    if (name == '') {
+      lname = _localeName;
+    }
+    List<Locale> _d = _locales.where((e) => e.name == lname).toList();
+    if (_d.isNotEmpty) {
+      return _d[0];
+    }
+    _d = _locales.where((e) => e.name == lname).toList();
+    return _d[0];
+  }
+
   /// 获取时间 返回 DateTime
   DateTime get dateTime => _datetime;
 
@@ -260,4 +495,9 @@ class Dayfl {
 
   /// 获取秒 String
   String get second => _sec;
+
+  /// 设置语言
+  set setLocale(String name) {
+    _localeName = name;
+  }
 }
