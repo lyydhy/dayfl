@@ -1,7 +1,7 @@
 /// Dayfl
 import 'format.dart';
 import 'location.dart';
-
+export 'location.dart';
 // typedef pluginFunc = void Function(Dayfl dayfl);
 
 /// 回调
@@ -111,11 +111,6 @@ class Dayfl {
     }
 
     return false;
-  }
-
-  /// 获取时间戳 单位毫秒
-  int valueOf() {
-    return _datetime.millisecondsSinceEpoch;
   }
 
   /// 格式化
@@ -303,11 +298,6 @@ class Dayfl {
     }
   }
 
-  /// isUtc
-  bool isUtc() {
-    return _datetime.isUtc;
-  }
-
   /// 和DateTime 的 compareTo 方法一样
   ///
   /// [date] 必须是  Dayfl 或者 DateTime
@@ -410,20 +400,8 @@ class Dayfl {
     }
   }
 
-  /// 判断是否是Dayfl
-  static bool isDayfl(dynamic arg) {
-    return arg is Dayfl;
-  }
-
-  /// 是否是闰年
-  bool isLeapYear() {
-    int _y = int.parse(_year);
-    if (_y % 400 == 0 || (_y % 4 == 0 && _y % 100 != 0)) return true;
-    return false;
-  }
-
   /// 获取当前日期月份天数
-  int daysInMonth() {
+  int get daysInMonth {
     int _m = int.parse(_month);
     int _y = int.parse(_year);
     int _m1 = _m + 1;
@@ -457,8 +435,15 @@ class Dayfl {
   /// 添加语言
   ///
   /// [arg] 语言类
-  static addLocale(Locale arg) {
+  static bool addLocale(Locale arg) {
+    if (_locales
+        .where((element) => element.name == arg.name)
+        .toList()
+        .isNotEmpty) {
+      return false;
+    }
     _locales.add(arg);
+    return true;
   }
 
   /// 获取当前使用语言包
@@ -474,6 +459,21 @@ class Dayfl {
     _d = _locales.where((e) => e.name == lname).toList();
     return _d[0];
   }
+
+  /// 是否是闰年
+  bool get isLeapYear {
+    int _y = int.parse(_year);
+    if (_y % 400 == 0 || (_y % 4 == 0 && _y % 100 != 0)) return true;
+    return false;
+  }
+
+  /// 获取时间戳 单位毫秒
+  int get valueOf {
+    return _datetime.millisecondsSinceEpoch;
+  }
+
+  /// isUtc
+  bool get isUtc => _datetime.isUtc;
 
   /// 获取时间 返回 DateTime
   DateTime get dateTime => _datetime;

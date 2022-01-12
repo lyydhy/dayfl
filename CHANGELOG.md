@@ -1,3 +1,13 @@
+## 0.1.2
+* Dayfl().isUtc() 改成get方法 Dayfl().isUtc
+* Dayfl().isLeapYear() 改成get方法 Dayfl().isLeapYear
+* Dayfl().valueOf() 改成get方法 Dayfl().valueOf
+* Dayfl().daysInMonth() 改成get方法 Dayfl().daysInMonth
+* 去掉isDayfl 方法
+
+## 0.1.1
+* 添加语言包做了名称检测
+
 ## 0.1.0
 * 新增方法 isLeapYear 判断是否是闰年
 * 新增方法 daysInMonth 获取月份的天数
