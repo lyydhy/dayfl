@@ -91,7 +91,10 @@ class _MyAppState extends State<MyApp> {
             Text(
                 "日期比较： ${Dayfl().isSame(Dayfl())}, \n日期比较指定单位: ${Dayfl().isSame(Dayfl(), DateLocationEnum.sec)}"),
             Text(
-                "指定语言: en:${Dayfl().format("YYYY-MMM-WW", 'en')},  cn: ${Dayfl().format("YYYY-MMM-WW")}")
+                "指定语言: en:${Dayfl().format("YYYY-MMM-WW", 'en')},  cn: ${Dayfl().format("YYYY-MMM-WW")}"),
+            Text("获取毫秒: ${Dayfl().valueOf}"),
+            Text("之前：${Dayfl().isBefore(Dayfl("2022-12-01"))}, 相反: ${Dayfl("2022-12-01").isBefore(Dayfl())}"),
+            Text("之后：${Dayfl().isAfter(Dayfl("2022-12-01"))}, 相反: ${Dayfl("2022-12-01").isAfter(Dayfl())}")
           ],
         ),
       ),
