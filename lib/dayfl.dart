@@ -1,4 +1,6 @@
 /// Dayfl
+import 'package:flutter/material.dart';
+
 import 'format.dart';
 import 'location.dart';
 export 'location.dart';
@@ -411,9 +413,7 @@ class Dayfl {
     }
     Dayfl endTime = Dayfl("$_y-$_m1-1");
     Dayfl startTime = Dayfl("$_year-$_month-1");
-    double days = (endTime.dateTime.millisecondsSinceEpoch -
-            startTime.dateTime.millisecondsSinceEpoch) /
-        (1000 * 60 * 60 * 24);
+    double days = (endTime.valueOf - startTime.valueOf) / (1000 * 60 * 60 * 24);
     return days.toInt();
   }
 
@@ -468,9 +468,7 @@ class Dayfl {
   }
 
   /// 获取时间戳 单位毫秒
-  int get valueOf {
-    return _datetime.millisecondsSinceEpoch;
-  }
+  int get valueOf => _datetime.millisecondsSinceEpoch;
 
   /// isUtc
   bool get isUtc => _datetime.isUtc;
