@@ -14,7 +14,7 @@
     // 参数1  接收 DateTime 和 int  和 String- 须符合DateTime.parse()
     // 参数2  当String 不符合DateTime.parse()的时候 传入你日期格式化字符串
     Dayfl(参数1， 参数2)
-    
+
     // 参数2 语言包名称 默认cn
     Dayfl().format(格式化字符串, [参数2])
     // 无参时 默认当前时间 格式为 YYYY-MM-DD HH:mm:ss
@@ -23,14 +23,7 @@
     // 新增格式化参数
     // 参数key 类似于 YYYY MM DD
     Dayfl.addMatchers(参数key, (
-        datetime, {
-        String year = '',
-        String month = '',
-        String day = '',
-        String hour = '',
-        String minute = '',
-        String second = '',
-    }) {
+        datetime, (dayfl) {
         return 参数key 对应 的值;
     })
 
