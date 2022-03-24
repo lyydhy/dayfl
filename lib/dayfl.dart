@@ -9,7 +9,7 @@ typedef MatchersFunc = String Function(Dayfl dayfl);
 
 class Dayfl {
   /// datetime
-  late DateTime _datetime;
+  DateTime? _datetime;
 
   /// 年
   String _year = '';
@@ -89,11 +89,11 @@ class Dayfl {
   /// [date] 接收时间可以是 Dayfl | 时间字符串 | DateTime  三者都不是 return false;
   bool isBefore(var date) {
     if (date is Dayfl) {
-      return _datetime.isBefore(date.dateTime);
+      return _datetime!.isBefore(date.dateTime!);
     } else if (date is DateTime) {
-      return _datetime.isBefore(date);
+      return _datetime!.isBefore(date);
     } else if (date is String) {
-      return _datetime.isBefore(Dayfl(date).dateTime);
+      return _datetime!.isBefore(Dayfl(date).dateTime!);
     }
     return false;
   }
@@ -103,11 +103,11 @@ class Dayfl {
   /// [date] 接收时间可以是 Dayfl|时间字符串|DateTime 三者都不是 return false;
   bool isAfter(var date) {
     if (date is Dayfl) {
-      return _datetime.isAfter(date.dateTime);
+      return _datetime!.isAfter(date.dateTime!);
     } else if (date is DateTime) {
-      return _datetime.isAfter(date);
+      return _datetime!.isAfter(date);
     } else if (date is String) {
-      return _datetime.isAfter(Dayfl(date).dateTime);
+      return _datetime!.isAfter(Dayfl(date).dateTime!);
     }
 
     return false;
@@ -122,6 +122,7 @@ class Dayfl {
     String formatStr = Location.defaultFormatStr,
     String locale = '',
   ]) {
+    if (_datetime == null) return '';
     if (locale == '') {
       locale = _localeName;
     }
@@ -181,7 +182,7 @@ class Dayfl {
   }
 
   /// 日期加减操作
-  DateTime _set(DateLocationEnum type, int num, int operation) {
+  DateTime? _set(DateLocationEnum type, int num, int operation) {
     if (type == DateLocationEnum.year) {
       int _y = int.parse(_year);
       if (operation == 1) {
@@ -216,27 +217,27 @@ class Dayfl {
       DateTime _d;
       if (type == DateLocationEnum.day) {
         if (operation == 1) {
-          _d = dateTime.add(Duration(days: num));
+          _d = dateTime!.add(Duration(days: num));
         } else {
-          _d = dateTime.subtract(Duration(days: num));
+          _d = dateTime!.subtract(Duration(days: num));
         }
       } else if (type == DateLocationEnum.hour) {
         if (operation == 1) {
-          _d = dateTime.add(Duration(hours: num));
+          _d = dateTime!.add(Duration(hours: num));
         } else {
-          _d = dateTime.subtract(Duration(hours: num));
+          _d = dateTime!.subtract(Duration(hours: num));
         }
       } else if (type == DateLocationEnum.minute) {
         if (operation == 1) {
-          _d = dateTime.add(Duration(minutes: num));
+          _d = dateTime!.add(Duration(minutes: num));
         } else {
-          _d = dateTime.subtract(Duration(minutes: num));
+          _d = dateTime!.subtract(Duration(minutes: num));
         }
       } else if (type == DateLocationEnum.sec) {
         if (operation == 1) {
-          _d = dateTime.add(Duration(seconds: num));
+          _d = dateTime!.add(Duration(seconds: num));
         } else {
-          _d = dateTime.subtract(Duration(seconds: num));
+          _d = dateTime!.subtract(Duration(seconds: num));
         }
       } else {
         _d = DateTime.now();
@@ -290,9 +291,9 @@ class Dayfl {
   /// [date] 必须是  Dayfl 或者 DateTime
   Duration difference(var date) {
     if (date is Dayfl) {
-      return _datetime.difference(date.dateTime);
+      return _datetime!.difference(date.dateTime!);
     } else if (date is DateTime) {
-      return _datetime.difference(date);
+      return _datetime!.difference(date);
     } else {
       return const Duration(hours: 0);
     }
@@ -303,36 +304,46 @@ class Dayfl {
   /// [date] 必须是  Dayfl 或者 DateTime
   int compareTo(var date) {
     if (date is Dayfl) {
-      return _datetime.compareTo(date.dateTime);
+      return _datetime!.compareTo(date.dateTime!);
     } else {
-      return _datetime.compareTo(date);
+      return _datetime!.compareTo(date);
     }
   }
 
   /// 类型推断
   void _object(var datetime, [String formatStr = '']) {
-    if (datetime is Dayfl) {
-      _datetime = datetime.dateTime;
-    } else if (datetime is String) {
-      _datetime = Format(timeStr: datetime, formatStr: formatStr).dateTime;
-    } else if (datetime is DateTime) {
-      _datetime = datetime;
-    } else if (datetime is int) {
-      _datetime = DateTime(datetime);
-    } else {
-      _datetime = DateTime.now();
+    try {
+      if (datetime is Dayfl) {
+        _datetime = datetime.dateTime;
+      } else if (datetime is String) {
+        _datetime = Format(timeStr: datetime, formatStr: formatStr).dateTime;
+      } else if (datetime is DateTime) {
+        _datetime = datetime;
+      } else if (datetime is int) {
+        _datetime = DateTime(datetime);
+      } else {
+        _datetime = DateTime.now();
+      }
+      _init();
+    } catch (e) {
+      _datetime = null;
+      // ignore: avoid_print
+      print("日期解析错误, 请查看格式是否正确！");
     }
-    _init();
   }
 
   /// 初始化
   void _init() {
-    _year = _datetime.year.toString();
-    _month = _datetime.month.toString();
-    _day = _datetime.day.toString();
-    _hour = _datetime.hour.toString();
-    _minute = _datetime.minute.toString();
-    _sec = _datetime.second.toString();
+    if (_datetime == null) {
+      _matchers = {};
+      return;
+    }
+    _year = _datetime!.year.toString();
+    _month = _datetime!.month.toString();
+    _day = _datetime!.day.toString();
+    _hour = _datetime!.hour.toString();
+    _minute = _datetime!.minute.toString();
+    _sec = _datetime!.second.toString();
     int _h = int.parse(_hour);
     _h = _h > 12 ? _h - 12 : _h;
     _matchers = {
@@ -401,7 +412,8 @@ class Dayfl {
   }
 
   /// 获取当前日期月份天数
-  int get daysInMonth {
+  int? get daysInMonth {
+    if (_datetime == null) return null;
     int _m = int.parse(_month);
     int _y = int.parse(_year);
     int _m1 = _m + 1;
@@ -411,7 +423,8 @@ class Dayfl {
     }
     Dayfl endTime = Dayfl("$_y-$_m1-1");
     Dayfl startTime = Dayfl("$_year-$_month-1");
-    double days = (endTime.valueOf - startTime.valueOf) / (1000 * 60 * 60 * 24);
+    double days =
+        (endTime.valueOf! - startTime.valueOf!) / (1000 * 60 * 60 * 24);
     return days.toInt();
   }
 
@@ -419,13 +432,14 @@ class Dayfl {
   ///
   /// return Map num, text
   Map<String, dynamic> getWeek([String locale = '']) {
+    if (_datetime == null) return {};
     Map<String, dynamic> map = {'num': null, 'text': ''};
-    map['num'] = _datetime.weekday;
+    map['num'] = _datetime!.weekday;
     Locale d = getLocale(locale);
     if (d.weekStart == 0) {
-      map['text'] = d.weekAbbreviations[_datetime.weekday - 1];
+      map['text'] = d.weekAbbreviations[_datetime!.weekday - 1];
     } else if (d.weekStart == 1) {
-      map['text'] = d.weekAbbreviations[_datetime.weekday];
+      map['text'] = d.weekAbbreviations[_datetime!.weekday];
     }
     return map;
   }
@@ -444,6 +458,20 @@ class Dayfl {
     return true;
   }
 
+  /// 转换成数组
+  /// dayfl('2019-01-25').toArray() // [ 2019, 0, 25, 0, 0, 0, 0 ]
+  List<int> toArray() {
+    if (_datetime == null) return [];
+    return [
+      int.parse(_year),
+      int.parse(_month),
+      int.parse(_day),
+      int.parse(_hour),
+      int.parse(_minute),
+      int.parse(second),
+    ];
+  }
+
   /// 获取当前使用语言包
   Locale getLocale([String name = '']) {
     String lname = name;
@@ -459,20 +487,29 @@ class Dayfl {
   }
 
   /// 是否是闰年
-  bool get isLeapYear {
+  bool? get isLeapYear {
+    if (_datetime == null) return null;
     int _y = int.parse(_year);
     if (_y % 400 == 0 || (_y % 4 == 0 && _y % 100 != 0)) return true;
     return false;
   }
 
   /// 获取时间戳 单位毫秒
-  int get valueOf => _datetime.millisecondsSinceEpoch;
+  int? get valueOf {
+    if (_datetime == null) return null;
+    return _datetime!.millisecondsSinceEpoch;
+  }
 
   /// isUtc
-  bool get isUtc => _datetime.isUtc;
+  bool? get isUtc {
+    if (_datetime == null) return null;
+    return _datetime!.isUtc;
+  }
 
   /// 获取时间 返回 DateTime
-  DateTime get dateTime => _datetime;
+  DateTime? get dateTime {
+    return _datetime;
+  }
 
   /// 获取年 String
   String get year => _year;

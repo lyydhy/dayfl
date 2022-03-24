@@ -9,7 +9,7 @@ class Format {
   String formatStr = '';
 
   /// datetime
-  late DateTime _dateTime;
+  DateTime? _dateTime;
 
   /// 构造方法
   Format({this.timeStr = '', this.formatStr = ''}) {
@@ -17,7 +17,7 @@ class Format {
   }
 
   /// 返回dateTime
-  DateTime get dateTime => _dateTime;
+  DateTime get dateTime => _dateTime!;
 
   /// 根据格式化字符串转换成正确的事件字符串
   void _fetchDateTime() {

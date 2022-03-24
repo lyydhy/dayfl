@@ -8,6 +8,9 @@
 
 [dayjs](https://github.com/iamkun/dayjs)的插件功能 用 dart extension 代替吧
 
+本项目的所有的功能都和dayjs  大家可以去看dayjs的文档 （除了插件，语言包功能，添加格式化参数）
+
+
 # 示例
 
 ```dart

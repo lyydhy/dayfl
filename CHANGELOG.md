@@ -1,3 +1,7 @@
+## 0.1.3
+* 添加空判断 解析日期错误时 不在是当前时间， 正常报错部分方法返回null或者空字符串
+* 新增方法 toArray 返回List<int>  示例：dayfl('2019-01-25').toArray() // [ 2019, 0, 25, 0, 0, 0, 0 ]
+
 ## 0.1.2
 * Dayfl().isUtc() 改成get方法 Dayfl().isUtc
 * Dayfl().isLeapYear() 改成get方法 Dayfl().isLeapYear

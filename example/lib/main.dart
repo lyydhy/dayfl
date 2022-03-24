@@ -76,7 +76,7 @@ class _MyAppState extends State<MyApp> {
           mainAxisSize: MainAxisSize.max,
           children: [
             Text("当前时间 :${Dayfl().format()}"),
-            Text("指定时间 :${Dayfl('2021-06-07').format('DD/MMM/YYYY HH:mm:ss')}"),
+            Text("指定时间 :${Dayfl('2021-06-01').format('YYYY-MM-DD HH:mm:ss')}"),
             Text(
                 "指定时间加上时间 :${Dayfl('2022-11-06').add(DateLocationEnum.month, 5).format()}"),
             Text(
@@ -85,16 +85,18 @@ class _MyAppState extends State<MyApp> {
                 "指定时间 :${Dayfl('2021-11-13 09:54:20').format('YYYY-MM-DD H:m:s')}"),
             Text(
                 "指定时间 :${Dayfl('26\\1/06 13:05:1', 'YY-M-DD HH:mm:s').format('YYYY-MM-DD a h:m:s')}"),
-            Text("是否是闰年: ${Dayfl().isLeapYear}"),
+            Text("是否是闰年: ${Dayfl('2022-01-').year}"),
             Text("当前日期月份天数: ${Dayfl().daysInMonth}"),
-            Text("指定日期月份天数: ${Dayfl('2021-2-9').daysInMonth}"),
+            Text("指定日期月份天数: ${Dayfl('2021-2-').daysInMonth}"),
             Text(
                 "日期比较： ${Dayfl().isSame(Dayfl())}, \n日期比较指定单位: ${Dayfl().isSame(Dayfl(), DateLocationEnum.sec)}"),
             Text(
                 "指定语言: en:${Dayfl().format("YYYY-MMM-WW", 'en')},  cn: ${Dayfl().format("YYYY-MMM-WW")}"),
             Text("获取毫秒: ${Dayfl().valueOf}"),
-            Text("之前：${Dayfl().isBefore(Dayfl("2022-12-01"))}, 相反: ${Dayfl("2022-12-01").isBefore(Dayfl())}"),
-            Text("之后：${Dayfl().isAfter(Dayfl("2022-12-01"))}, 相反: ${Dayfl("2022-12-01").isAfter(Dayfl())}")
+            Text(
+                "之前：${Dayfl().isBefore(Dayfl("2022-12-01"))}, 相反: ${Dayfl("2022-12-01").isBefore(Dayfl())}"),
+            Text(
+                "之后：${Dayfl().isAfter(Dayfl("2022-12-01"))}, 相反: ${Dayfl("2022-12-01").isAfter(Dayfl())}")
           ],
         ),
       ),
