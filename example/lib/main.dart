@@ -96,7 +96,9 @@ class _MyAppState extends State<MyApp> {
             Text(
                 "之前：${Dayfl().isBefore(Dayfl("2022-12-01"))}, 相反: ${Dayfl("2022-12-01").isBefore(Dayfl())}"),
             Text(
-                "之后：${Dayfl().isAfter(Dayfl("2022-12-01"))}, 相反: ${Dayfl("2022-12-01").isAfter(Dayfl())}")
+                "之后：${Dayfl().isAfter(Dayfl("2022-12-01"))}, 相反: ${Dayfl("2022-12-01").isAfter(Dayfl())}"),
+            Text(
+                "isDayFormat: ${Dayfl().subtract(DateLocationEnum.hour, 15).format('', '', true)}")
           ],
         ),
       ),

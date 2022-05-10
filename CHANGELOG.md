@@ -1,3 +1,6 @@
+## 0.1.5
+* format 新增第三个参数dayFormat 可传bool或者带参的function 主要是实现 类似于小于10s 返回刚刚这种文字
+
 ## 0.1.4
 * 调整compileSdkVersion 和 targetSdkVersion 为31
 

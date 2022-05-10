@@ -7,6 +7,9 @@ export 'location.dart';
 /// 回调
 typedef MatchersFunc = String Function(Dayfl dayfl);
 
+/// dayFormatFunc
+typedef DayFormatFunc = String Function(Dayfl dayfl);
+
 class Dayfl {
   /// datetime
   DateTime? _datetime;
@@ -38,33 +41,39 @@ class Dayfl {
   /// 语言数组 默认中文
   static final List<Locale> _locales = [
     Locale(
-      name: 'cn',
-      monthStart: 0,
-      monthAbbreviations: [
-        '一月',
-        '二月',
-        '三月',
-        '四月',
-        '五月',
-        '六月',
-        '七月',
-        '八月',
-        '九月',
-        '十月',
-        '十一月',
-        '十二月',
-      ],
-      weekStart: 0,
-      weekAbbreviations: [
-        '星期一',
-        '星期二',
-        '星期三',
-        '星期四',
-        '星期五',
-        '星期六',
-        '星期日',
-      ],
-    ),
+        name: 'cn',
+        monthStart: 0,
+        monthAbbreviations: [
+          '一月',
+          '二月',
+          '三月',
+          '四月',
+          '五月',
+          '六月',
+          '七月',
+          '八月',
+          '九月',
+          '十月',
+          '十一月',
+          '十二月',
+        ],
+        weekStart: 0,
+        weekAbbreviations: [
+          '星期一',
+          '星期二',
+          '星期三',
+          '星期四',
+          '星期五',
+          '星期六',
+          '星期日',
+        ],
+        formatText: {
+          'ltTenSec': '刚刚',
+          'ltDay': '天前',
+          'ltMonth': '月前',
+          'yesterday': '昨天',
+          'yesteryear': '去年'
+        }),
   ];
 
   /// 新增格式map
@@ -118,10 +127,14 @@ class Dayfl {
   /// [formatStr] 格式化字符串
   ///
   /// [locale] 语言包
+  ///
+  /// [dayFormat] 文字格式化  小于10s= 刚刚  [今年] 当月几天前 往月几月前  [去年] 去年 'MM-DD HH:mm:ss [默认字符串] dayFormat 可以传bool 类型 也可以传一个带参的Function 自定义实现你的功能 默认false
   String format([
     String formatStr = Location.defaultFormatStr,
     String locale = '',
+    var dayFormat = false,
   ]) {
+    if (formatStr == '') formatStr = Location.defaultFormatStr;
     if (_datetime == null) return '';
     if (locale == '') {
       locale = _localeName;
@@ -155,6 +168,36 @@ class Dayfl {
       _matcherstatic.forEach((key, value) {
         s = s.replaceAll(key, _matchers[key].toString());
       });
+    }
+
+    if (dayFormat is bool && dayFormat) {
+      Dayfl newDate = Dayfl();
+      if (newDate.isSame(this, DateLocationEnum.year) &&
+          newDate.isAfter(this)) {
+        int timeX = newDate.valueOf! - valueOf!;
+        if (timeX < 10000) {
+          s = _locale.formatText['ltTenSec'] ?? '';
+        }
+        if (newDate.isSame(this, DateLocationEnum.month)) {
+          timeX = newDate.difference(this).inHours;
+          timeX = (timeX / 24).truncate();
+          s = '$timeX' + (_locale.formatText['ltDay'] ?? '');
+          if (newDate.difference(this).inHours - int.parse(newDate.hour) > 0) {
+            s = _locale.formatText['yesterday'] ?? '';
+          }
+        } else {
+          timeX = int.parse(newDate.month) - int.parse(month);
+          s = '$timeX' + (_locale.formatText['ltMonth'] ?? '');
+        }
+      } else if (newDate.isAfter(this)) {
+        int timeX = int.parse(newDate.year) - int.parse(year);
+        if (timeX > 0 && timeX < 2) {
+          s = (_locale.formatText['yesteryear'] ?? '') +
+              ' ${format('MM-DD HH:mm:ss')}';
+        }
+      }
+    } else if (dayFormat is DayFormatFunc) {
+      s = dayFormat(this);
     }
     return s;
   }

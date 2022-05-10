@@ -41,6 +41,9 @@ class Locale {
   /// 周数组
   List<String> weekAbbreviations = [];
 
+  /// 格式文字
+  Map<String, String> formatText = {};
+
   /// [name] 语言名称
   ///
   /// [monthStart] 月份缩写开始下标  只能是 0 或者 1 其他长度请自行通过addMatchers的方式实现
@@ -50,11 +53,18 @@ class Locale {
   /// [weekStart] 周缩写开始 只能是 0 或者 1 其他长度请自行通过addMatchers的方式实现
   ///
   /// [weekAbbreviations] 周数组
-  Locale({
-    required this.name,
-    this.monthStart = 0,
-    this.monthAbbreviations = const [],
-    this.weekStart = 0,
-    this.weekAbbreviations = const [],
-  });
+  ///
+  /// [formatText] 格式文字
+  Locale(
+      {required this.name,
+      this.monthStart = 0,
+      this.monthAbbreviations = const [],
+      this.weekStart = 0,
+      this.weekAbbreviations = const [],
+      this.formatText = const {}});
+
+  @override
+  String toString() {
+    return 'Locale{name: $name, monthStart: $monthStart, monthAbbreviations: $monthAbbreviations, weekStart: $weekStart, weekAbbreviations: $weekAbbreviations, formatText: $formatText}';
+  }
 }
