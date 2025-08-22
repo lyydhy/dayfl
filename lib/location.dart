@@ -44,6 +44,9 @@ class Locale {
   /// 格式文字
   Map<String, String> formatText = {};
 
+  /// 其他文字  扩展的时候使用
+  Map<String, String> otherText = {};
+
   /// [name] 语言名称
   ///
   /// [monthStart] 月份缩写开始下标  只能是 0 或者 1 其他长度请自行通过addMatchers的方式实现
@@ -61,7 +64,8 @@ class Locale {
       this.monthAbbreviations = const [],
       this.weekStart = 0,
       this.weekAbbreviations = const [],
-      this.formatText = const {}});
+      this.formatText = const {},
+      this.otherText = const {}});
 
   @override
   String toString() {

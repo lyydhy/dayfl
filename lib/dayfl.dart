@@ -74,6 +74,40 @@ class Dayfl {
           'yesterday': '昨天',
           'yesteryear': '去年'
         }),
+    Locale(
+        name: 'en',
+        monthStart: 0,
+        monthAbbreviations: [
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+          'August',
+          'September',
+          'October',
+          'November',
+          'December',
+        ],
+        weekStart: 0,
+        weekAbbreviations: [
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday',
+          'Sunday',
+        ],
+        formatText: {
+          'ltTenSec': 'just now',
+          'ltDay': 'days ago',
+          'ltMonth': 'months ago',
+          'yesterday': 'yesterday',
+          'yesteryear': 'last year'
+        }),
   ];
 
   /// 新增格式map
