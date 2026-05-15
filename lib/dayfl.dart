@@ -57,7 +57,7 @@ class Dayfl {
           '十一月',
           '十二月',
         ],
-        weekStart: 0,
+        weekStart: 1,
         weekAbbreviations: [
           '星期一',
           '星期二',
@@ -353,6 +353,12 @@ class Dayfl {
         _month = totalMonths.toString();
         _year = _y.toString();
       }
+      // 钳位日期到目标月份的最大天数，避免溢出
+      int maxDay = DateTime(int.parse(_year), int.parse(_month) + 1, 0).day;
+      int currentDay = int.parse(_day);
+      if (currentDay > maxDay) {
+        _day = maxDay.toString();
+      }
     } else if (type == DateLocationEnum.day ||
         type == DateLocationEnum.hour ||
         type == DateLocationEnum.minute ||
@@ -646,18 +652,17 @@ class Dayfl {
   Map<String, dynamic> getWeek([String locale = '']) {
     if (_datetime == null) return {};
     Map<String, dynamic> map = {'num': null, 'text': ''};
-    map['num'] = _datetime!.weekday;
     Locale d = getLocale(locale);
-    if (d.weekStart == 0) {
-      int index = _datetime!.weekday - 1;
-      if (index >= 0 && index < d.weekAbbreviations.length) {
-        map['text'] = d.weekAbbreviations[index];
-      }
-    } else if (d.weekStart == 1) {
-      int index = _datetime!.weekday;
-      if (index >= 0 && index < d.weekAbbreviations.length) {
-        map['text'] = d.weekAbbreviations[index];
-      }
+    int weekday = _datetime!.weekday;
+    map['num'] = weekday;
+    int index;
+    if (d.weekStart == 1) {
+      index = weekday - 1;
+    } else {
+      index = (weekday + 6) % 7;
+    }
+    if (index >= 0 && index < d.weekAbbreviations.length) {
+      map['text'] = d.weekAbbreviations[index];
     }
     return map;
   }
@@ -720,17 +725,23 @@ class Dayfl {
     }
     
     int weekday = _datetime!.weekday;
-    int weekStart = locale.weekStart;
-    int adjustedWeekday = (weekday - weekStart) % 7;
-    if (adjustedWeekday < 0) adjustedWeekday += 7;
+    // 计算数组索引：根据 weekStart 偏移
+    // weekStart=1（周一开头）：weekday 1-7 对应 index 0-6
+    // weekStart=0（周日开头）：weekday 1-7 对应 index 6,0,1,2,3,4,5
+    int index;
+    if (locale.weekStart == 1) {
+      index = weekday - 1;
+    } else {
+      index = (weekday + 6) % 7;
+    }
     
     String weekText = '';
-    if (adjustedWeekday < locale.weekAbbreviations.length) {
-      weekText = locale.weekAbbreviations[adjustedWeekday];
+    if (index >= 0 && index < locale.weekAbbreviations.length) {
+      weekText = locale.weekAbbreviations[index];
     }
     
     return {
-      'num': adjustedWeekday,
+      'num': weekday,
       'text': weekText,
     };
   }

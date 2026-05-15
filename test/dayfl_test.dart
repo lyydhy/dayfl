@@ -293,4 +293,83 @@ void main() {
     });
   });
 
+  group('Week Formatting Tests', () {
+    test('2026-05-07 should be Thursday (星期四)', () {
+      final dayfl = Dayfl('2026-05-07');
+      expect(dayfl.format('WW'), equals('星期四'));
+      expect(dayfl.format('W'), equals('4'));
+    });
+
+    test('2026-05-09 should be Saturday (星期六) with num 6', () {
+      final dayfl = Dayfl('2026-05-09');
+      expect(dayfl.format('WW'), equals('星期六'));
+      expect(dayfl.format('W'), equals('6'));
+    });
+
+    test('full week mapping correctness', () {
+      // 2026-05-04 Mon ~ 2026-05-10 Sun
+      final expected = [
+        ['2026-05-04', '星期一', '1'],
+        ['2026-05-05', '星期二', '2'],
+        ['2026-05-06', '星期三', '3'],
+        ['2026-05-07', '星期四', '4'],
+        ['2026-05-08', '星期五', '5'],
+        ['2026-05-09', '星期六', '6'],
+        ['2026-05-10', '星期日', '7'],
+      ];
+      for (final e in expected) {
+        final dayfl = Dayfl(e[0]);
+        expect(dayfl.format('WW'), equals(e[1]),
+            reason: '${e[0]} WW should be ${e[1]}');
+        expect(dayfl.format('W'), equals(e[2]),
+            reason: '${e[0]} W should be ${e[2]}');
+      }
+    });
+
+    test('getWeek returns correct values', () {
+      final dayfl = Dayfl('2026-05-07');
+      final week = dayfl.getWeek();
+      expect(week['num'], equals(4));
+      expect(week['text'], equals('星期四'));
+    });
+  });
+
+  group('Month Overflow Tests', () {
+    test('Jan 31 + 1 month should be Feb 28 (2026)', () {
+      final dayfl = Dayfl('2026-01-31');
+      dayfl.add(DateLocationEnum.month, 1);
+      expect(dayfl.format('YYYY-MM-DD'), equals('2026-02-28'));
+    });
+
+    test('Jan 30 + 1 month should be Feb 28 (2026)', () {
+      final dayfl = Dayfl('2026-01-30');
+      dayfl.add(DateLocationEnum.month, 1);
+      expect(dayfl.format('YYYY-MM-DD'), equals('2026-02-28'));
+    });
+
+    test('Mar 31 - 1 month should be Feb 28 (2026)', () {
+      final dayfl = Dayfl('2026-03-31');
+      dayfl.subtract(DateLocationEnum.month, 1);
+      expect(dayfl.format('YYYY-MM-DD'), equals('2026-02-28'));
+    });
+
+    test('Jan 29 + 1 month should be Feb 28 (non-leap year)', () {
+      final dayfl = Dayfl('2025-01-29');
+      dayfl.add(DateLocationEnum.month, 1);
+      expect(dayfl.format('YYYY-MM-DD'), equals('2025-02-28'));
+    });
+
+    test('Jan 29 + 1 month should be Feb 29 (leap year)', () {
+      final dayfl = Dayfl('2024-01-29');
+      dayfl.add(DateLocationEnum.month, 1);
+      expect(dayfl.format('YYYY-MM-DD'), equals('2024-02-29'));
+    });
+
+    test('Jan 15 + 1 month should be Feb 15 (no overflow)', () {
+      final dayfl = Dayfl('2026-01-15');
+      dayfl.add(DateLocationEnum.month, 1);
+      expect(dayfl.format('YYYY-MM-DD'), equals('2026-02-15'));
+    });
+  });
+
 }
