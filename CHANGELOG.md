@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.3 (2026-05-20)
+
+- 恢复更新日志历史记录
+- 添加 GitHub Actions 自动发布 workflow
+
 ## 2.0.2 (2026-05-20)
 
 ### Bug Fixes
