@@ -42,7 +42,6 @@ class Dayfl {
   static final List<Locale> _locales = [
     Locale(
         name: 'cn',
-        monthStart: 0,
         monthAbbreviations: [
           '一月',
           '二月',
@@ -76,7 +75,6 @@ class Dayfl {
         }),
     Locale(
         name: 'en',
-        monthStart: 0,
         monthAbbreviations: [
           'January',
           'February',
@@ -189,25 +187,31 @@ class Dayfl {
         "WW": weekInfo['text'],
       });
     }
-    if (!_matchers.containsKey("MMM")) {
-      int monthIndex = month;
-      if (_locale.monthStart == 0) {
-        // 确保索引在有效范围内
-        if (monthIndex >= 1 && monthIndex <= _locale.monthAbbreviations.length) {
-          _matchers.addAll({"MMM": _locale.monthAbbreviations[monthIndex - 1]});
-        }
-      } else if (_locale.monthStart == 1) {
-        // 确保索引在有效范围内
-        if (monthIndex >= 0 && monthIndex < _locale.monthAbbreviations.length) {
-          _matchers.addAll({"MMM": _locale.monthAbbreviations[monthIndex]});
-        }
+    // 根据当前语言设置 MMM
+    {
+      int monthIndex = month - 1;
+      if (monthIndex >= 0 && monthIndex < _locale.monthAbbreviations.length) {
+        _matchers["MMM"] = _locale.monthAbbreviations[monthIndex];
       }
     }
     String s = formatStr;
+    // 使用占位符替换，避免 token 值中的字符被二次替换
+    // 例如: "a" token 的值 "am" 不会被后续替换污染已替换好的月份名
     var sortedKeys = _matchers.keys.toList()..sort((a, b) => b.length.compareTo(a.length));
-    for (var key in sortedKeys) {
+    for (int i = 0; i < sortedKeys.length; i++) {
+      String key = sortedKeys[i];
       if (s.contains(key)) {
-        s = s.replaceAll(key, _matchers[key]!);
+        // 用 Unicode 私用区字符作为占位符
+        String placeholder = String.fromCharCode(0xE000 + i);
+        s = s.replaceAll(key, placeholder);
+      }
+    }
+    // 第二轮：占位符替换为实际值
+    for (int i = 0; i < sortedKeys.length; i++) {
+      String key = sortedKeys[i];
+      String placeholder = String.fromCharCode(0xE000 + i);
+      if (s.contains(placeholder)) {
+        s = s.replaceAll(placeholder, _matchers[key]!);
       }
     }
 

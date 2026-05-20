@@ -29,9 +29,6 @@ class Locale {
   /// 名称
   String name = '';
 
-  /// 月份缩写开始
-  int monthStart = 0;
-
   /// 月份缩写数组
   List<String> monthAbbreviations = [];
 
@@ -49,8 +46,6 @@ class Locale {
 
   /// [name] 语言名称
   ///
-  /// [monthStart] 月份缩写开始下标  只能是 0 或者 1 其他长度请自行通过addMatchers的方式实现
-  ///
   /// [monthAbbreviations] 月份缩写数组 必须是一月份开始递增
   ///
   /// [weekStart] 周缩写开始 只能是 0 或者 1 其他长度请自行通过addMatchers的方式实现
@@ -60,7 +55,6 @@ class Locale {
   /// [formatText] 格式文字
   Locale(
       {required this.name,
-      this.monthStart = 0,
       this.monthAbbreviations = const [],
       this.weekStart = 0,
       this.weekAbbreviations = const [],
@@ -69,6 +63,6 @@ class Locale {
 
   @override
   String toString() {
-    return 'Locale{name: $name, monthStart: $monthStart, monthAbbreviations: $monthAbbreviations, weekStart: $weekStart, weekAbbreviations: $weekAbbreviations, formatText: $formatText}';
+    return 'Locale{name: $name, monthAbbreviations: $monthAbbreviations, weekStart: $weekStart, weekAbbreviations: $weekAbbreviations, formatText: $formatText}';
   }
 }

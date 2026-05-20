@@ -48,7 +48,6 @@ class _MyAppState extends State<MyApp> {
           'Nov',
           'Dec',
         ],
-        monthStart: 0,
         weekAbbreviations: [
           'Mon',
           'Tue',
