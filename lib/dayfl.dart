@@ -579,7 +579,6 @@ class Dayfl {
       case DateLocationEnum.minute: return minute;
       case DateLocationEnum.sec: return second;
       case DateLocationEnum.millisecondsSinceEpoch: return valueOf!;
-      default: return 0;
     }
   }
 
@@ -592,7 +591,9 @@ class Dayfl {
       case DateLocationEnum.hour: hour = value; break;
       case DateLocationEnum.minute: minute = value; break;
       case DateLocationEnum.sec: second = value; break;
-      default: break;
+      case DateLocationEnum.millisecondsSinceEpoch:
+        _datetime = DateTime.fromMillisecondsSinceEpoch(value, isUtc: _datetime?.isUtc ?? false);
+        break;
     }
     return this;
   }
