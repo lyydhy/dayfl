@@ -1,0 +1,10 @@
+docs/
+docs/node_modules/
+docs/.vitepress/
+node_modules/
+example/
+test/
+build/
+.git/
+.github/
+.pubignore
