@@ -1,15 +1,24 @@
 # Changelog
 
-## 2.0.3 (2026-05-20)
+## 2.0.4 (2026-05-20)
 
-- 恢复更新日志历史记录
-- 添加 GitHub Actions 自动发布 workflow
+### New Features
+
 - 新增 `startOf()` 方法，将日期重置为指定单位的起始时间
 - 新增 `isBetween()` 方法，判断日期是否在两个日期之间
 - 新增 `isSameOrBefore()` / `isSameOrAfter()` 方法
 - 新增通用 `get(unit)` / `set(unit, value)` 方法
 - 新增 `unix()` 秒级时间戳、`toISOString()` ISO 8601 字符串、`isValid()` 日期有效性检查
+
+### Other
+
 - 移除 AI_README 中的版本号，避免每次发版都要更新
+- 测试用例从 200 扩展到 220 个
+
+## 2.0.3 (2026-05-20)
+
+- 恢复更新日志历史记录
+- 添加 GitHub Actions 自动发布 workflow
 
 ## 2.0.2 (2026-05-20)
 
