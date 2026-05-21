@@ -1226,6 +1226,27 @@ void main() {
       final d = Dayfl('2023-06-15');
       expect(d.isBetween('2023-06-01', '2023-06-30'), isTrue);
     });
+
+    test('isBetween with DateTime', () {
+      final d = Dayfl('2023-06-15');
+      expect(d.isBetween(DateTime(2023, 6, 1), DateTime(2023, 6, 30)), isTrue);
+    });
+
+    test('isBetween outside range', () {
+      final d = Dayfl('2023-06-15');
+      expect(d.isBetween(Dayfl('2023-07-01'), Dayfl('2023-07-30')), isFalse);
+      expect(d.isBetween(Dayfl('2023-01-01'), Dayfl('2023-02-01')), isFalse);
+    });
+
+    test('isBetween inclusive outside range', () {
+      final d = Dayfl('2023-06-15');
+      expect(d.isBetween(Dayfl('2023-07-01'), Dayfl('2023-07-30'), inclusive: true), isFalse);
+    });
+
+    test('isBetween invalid input returns false', () {
+      final d = Dayfl('2023-06-15');
+      expect(d.isBetween(123, 456), isFalse);
+    });
   });
 
   group('isSameOrBefore', () {
@@ -1247,10 +1268,40 @@ void main() {
       expect(a.isSameOrBefore(b), isFalse);
     });
 
-    test('same month different day', () {
+    test('same month different day with month unit', () {
       final a = Dayfl('2023-06-15');
       final b = Dayfl('2023-06-20');
       expect(a.isSameOrBefore(b, DateLocationEnum.month), isTrue);
+    });
+
+    test('different month same year with month unit', () {
+      final a = Dayfl('2023-06-15');
+      final b = Dayfl('2023-08-15');
+      expect(a.isSameOrBefore(b, DateLocationEnum.month), isTrue);
+    });
+
+    test('with DateTime input', () {
+      final a = Dayfl('2023-06-15');
+      expect(a.isSameOrBefore(DateTime(2023, 6, 15)), isTrue);
+      expect(a.isSameOrBefore(DateTime(2023, 6, 14)), isFalse);
+    });
+
+    test('with String input', () {
+      final a = Dayfl('2023-06-15');
+      expect(a.isSameOrBefore('2023-06-15'), isTrue);
+      expect(a.isSameOrBefore('2023-06-14'), isFalse);
+    });
+
+    test('different year same month with year unit', () {
+      final a = Dayfl('2023-06-15');
+      final b = Dayfl('2025-06-15');
+      expect(a.isSameOrBefore(b, DateLocationEnum.year), isTrue);
+    });
+
+    test('same year different month with year unit', () {
+      final a = Dayfl('2023-06-15');
+      final b = Dayfl('2023-12-15');
+      expect(a.isSameOrBefore(b, DateLocationEnum.year), isTrue);
     });
   });
 
@@ -1273,10 +1324,34 @@ void main() {
       expect(a.isSameOrAfter(b), isFalse);
     });
 
-    test('same year different month', () {
+    test('same year different month with year unit', () {
       final a = Dayfl('2023-12-15');
       final b = Dayfl('2023-06-15');
       expect(a.isSameOrAfter(b, DateLocationEnum.year), isTrue);
+    });
+
+    test('different year same month with year unit', () {
+      final a = Dayfl('2025-06-15');
+      final b = Dayfl('2023-06-15');
+      expect(a.isSameOrAfter(b, DateLocationEnum.year), isTrue);
+    });
+
+    test('with DateTime input', () {
+      final a = Dayfl('2023-06-15');
+      expect(a.isSameOrAfter(DateTime(2023, 6, 15)), isTrue);
+      expect(a.isSameOrAfter(DateTime(2023, 6, 16)), isFalse);
+    });
+
+    test('with String input', () {
+      final a = Dayfl('2023-06-15');
+      expect(a.isSameOrAfter('2023-06-15'), isTrue);
+      expect(a.isSameOrAfter('2023-06-16'), isFalse);
+    });
+
+    test('same month different day with month unit', () {
+      final a = Dayfl('2023-06-20');
+      final b = Dayfl('2023-06-15');
+      expect(a.isSameOrAfter(b, DateLocationEnum.month), isTrue);
     });
   });
 
@@ -1284,7 +1359,7 @@ void main() {
   // 22. get() / set() 通用方法
   // ═══════════════════════════════════════════════
   group('get() / set()', () {
-    test('get by unit', () {
+    test('get all units', () {
       final d = Dayfl('2023-06-15 14:30:45');
       expect(d.get(DateLocationEnum.year), equals(2023));
       expect(d.get(DateLocationEnum.month), equals(6));
@@ -1294,7 +1369,12 @@ void main() {
       expect(d.get(DateLocationEnum.sec), equals(45));
     });
 
-    test('set by unit', () {
+    test('get millisecondsSinceEpoch returns valueOf', () {
+      final d = Dayfl('2023-06-15 12:00:00', 'YYYY-MM-DD HH:mm:ss');
+      expect(d.get(DateLocationEnum.millisecondsSinceEpoch), equals(d.valueOf));
+    });
+
+    test('set year/month/day', () {
       final d = Dayfl('2023-06-15 14:30:45');
       d.set(DateLocationEnum.year, 2025);
       expect(d.year, equals(2025));
@@ -1304,11 +1384,29 @@ void main() {
       expect(d.day, equals(25));
     });
 
+    test('set hour/minute/second', () {
+      final d = Dayfl('2023-06-15 14:30:45');
+      d.set(DateLocationEnum.hour, 8);
+      expect(d.hour, equals(8));
+      d.set(DateLocationEnum.minute, 15);
+      expect(d.minute, equals(15));
+      d.set(DateLocationEnum.sec, 30);
+      expect(d.second, equals(30));
+    });
+
     test('set is chainable', () {
       final d = Dayfl('2023-06-15');
       d.set(DateLocationEnum.year, 2025).set(DateLocationEnum.month, 1);
       expect(d.year, equals(2025));
       expect(d.month, equals(1));
+    });
+
+    test('set with chainable hour/minute/second', () {
+      final d = Dayfl('2023-06-15 14:30:45');
+      d.set(DateLocationEnum.hour, 8).set(DateLocationEnum.minute, 0).set(DateLocationEnum.sec, 0);
+      expect(d.hour, equals(8));
+      expect(d.minute, equals(0));
+      expect(d.second, equals(0));
     });
   });
 
@@ -1321,9 +1419,19 @@ void main() {
       expect(d.unix(), equals(d.dateTime!.millisecondsSinceEpoch ~/ 1000));
     });
 
+    test('unix with known timestamp', () {
+      final d = Dayfl(1686811200);
+      expect(d.unix(), equals(1686811200));
+    });
+
     test('toISOString returns ISO 8601', () {
       final d = Dayfl('2023-06-15 12:00:00', 'YYYY-MM-DD HH:mm:ss');
       expect(d.toISOString(), equals(d.dateTime!.toIso8601String()));
+    });
+
+    test('toISOString contains T separator', () {
+      final d = Dayfl('2023-06-15 12:30:45', 'YYYY-MM-DD HH:mm:ss');
+      expect(d.toISOString(), contains('T'));
     });
 
     test('isValid returns true for valid date', () {
@@ -1333,6 +1441,16 @@ void main() {
 
     test('isValid returns true for current time', () {
       final d = Dayfl();
+      expect(d.isValid(), isTrue);
+    });
+
+    test('isValid returns true for int timestamp', () {
+      final d = Dayfl(1686811200);
+      expect(d.isValid(), isTrue);
+    });
+
+    test('isValid returns true for DateTime input', () {
+      final d = Dayfl(DateTime(2023, 6, 15));
       expect(d.isValid(), isTrue);
     });
   });

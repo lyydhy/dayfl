@@ -132,6 +132,18 @@ d.subtract(DateLocationEnum.sec, 30) // 减 30 秒
 d.endOf(DateLocationEnum.year)   // 年末: 12-31 23:59:59.999
 d.endOf(DateLocationEnum.month)  // 月末: 当月最后一天 23:59:59.999
 d.endOf(DateLocationEnum.day)    // 日末: 当天 23:59:59.999
+d.startOf(DateLocationEnum.year)   // 年初: 01-01 00:00:00.000
+d.startOf(DateLocationEnum.month)  // 月初: 当月1日 00:00:00.000
+d.startOf(DateLocationEnum.day)    // 日初: 当天 00:00:00.000
+```
+
+### 通用 Getter / Setter
+
+```dart
+d.get(DateLocationEnum.year)     // int: 按单位获取值
+d.get(DateLocationEnum.month)
+d.set(DateLocationEnum.year, 2025)    // 按单位设置值，支持链式
+d.set(DateLocationEnum.month, 12).set(DateLocationEnum.day, 25)
 ```
 
 ### 日期比较
@@ -141,12 +153,24 @@ d.isBefore(other)    // bool: 是否在 other 之前
 d.isAfter(other)     // bool: 是否在 other 之后
 d.isSame(other)      // bool: 是否相同（毫秒精度）
 d.isSame(other, DateLocationEnum.year)   // 同年
-d.isSame(other, DateLocationEnum.month)  // 同年同月
-d.isSame(other, DateLocationEnum.day)    // 同年同月同日
+d.isSameOrBefore(other)            // 小于等于
+d.isSameOrBefore(other, DateLocationEnum.month) // 同月或之前
+d.isSameOrAfter(other)             // 大于等于
+d.isSameOrAfter(other, DateLocationEnum.year)   // 同年或之后
+d.isBetween(a, b)                  // 是否在 a 和 b 之间（不含端点）
+d.isBetween(a, b, inclusive: true) // 含端点
 d.compareTo(other)   // int: -1, 0, 1
 ```
 
 **other 参数支持类型**: `Dayfl` / `DateTime` / `String`
+
+### 工具方法
+
+```dart
+d.unix()          // int?: 秒级 Unix 时间戳
+d.toISOString()   // String?: ISO 8601 字符串
+d.isValid()       // bool: 日期是否有效
+```
 
 ### 时间差
 
@@ -233,16 +257,20 @@ class Locale {
 dart test
 ```
 
-运行全部 174 个测试，覆盖：
+运行全部 220 个测试，覆盖：
 - 构造函数变体（7种输入类型）
 - 所有 format 占位符（20个）
 - format dayFormat 文字格式化和回调
 - add/subtract 全单位（年月日时分秒）
-- endOf 全6级
+- startOf/endOf 全6级
 - isBefore/isAfter（Dayfl/DateTime/String）
 - isSame 全7级精度
+- isSameOrBefore/isSameOrAfter（含单位精度）
+- isBetween（exclusive/inclusive/反序/字符串/DateTime/无效输入）
 - difference/diffIn 全单位
 - compareTo
+- get/set 通用方法（含链式调用）
+- unix/toISOString/isValid
 - 月溢出边界
 - 中英文周格式化
 - MMM 月份缩写中英文
