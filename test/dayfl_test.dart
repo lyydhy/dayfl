@@ -603,6 +603,52 @@ void main() {
   });
 
   // ═══════════════════════════════════════════════
+  // 9.5 startOf()
+  // ═══════════════════════════════════════════════
+  group('startOf()', () {
+    test('startOf year', () {
+      final d = Dayfl('2023-06-15 10:30:45.123');
+      d.startOf(DateLocationEnum.year);
+      expect(d.format('YYYY-MM-DD HH:mm:ss.SSS'), equals('2023-01-01 00:00:00.000'));
+    });
+
+    test('startOf month', () {
+      final d = Dayfl('2024-02-15 10:30:45.123');
+      d.startOf(DateLocationEnum.month);
+      expect(d.format('YYYY-MM-DD HH:mm:ss.SSS'), equals('2024-02-01 00:00:00.000'));
+    });
+
+    test('startOf day', () {
+      final d = Dayfl('2023-06-15 10:30:45.123');
+      d.startOf(DateLocationEnum.day);
+      expect(d.format('YYYY-MM-DD HH:mm:ss.SSS'), equals('2023-06-15 00:00:00.000'));
+    });
+
+    test('startOf hour', () {
+      final d = Dayfl('2023-06-15 10:30:45.123');
+      d.startOf(DateLocationEnum.hour);
+      expect(d.format('YYYY-MM-DD HH:mm:ss.SSS'), equals('2023-06-15 10:00:00.000'));
+    });
+
+    test('startOf minute', () {
+      final d = Dayfl('2023-06-15 10:30:45.123');
+      d.startOf(DateLocationEnum.minute);
+      expect(d.format('YYYY-MM-DD HH:mm:ss.SSS'), equals('2023-06-15 10:30:00.000'));
+    });
+
+    test('startOf second', () {
+      final d = Dayfl('2023-06-15 10:30:45.123');
+      d.startOf(DateLocationEnum.sec);
+      expect(d.format('YYYY-MM-DD HH:mm:ss.SSS'), equals('2023-06-15 10:30:45.000'));
+    });
+
+    test('startOf returns same instance (chainable)', () {
+      final d = Dayfl('2023-06-15');
+      expect(d.startOf(DateLocationEnum.day), same(d));
+    });
+  });
+
+  // ═══════════════════════════════════════════════
   // 10. isBefore() / isAfter()
   // ═══════════════════════════════════════════════
   group('isBefore / isAfter', () {

@@ -272,6 +272,37 @@ class Dayfl {
     return this;
   }
 
+  /// Manipulate the Dayfl object to the start of a unit of time.
+  Dayfl startOf(DateLocationEnum type) {
+    if (_datetime == null) {
+      throw StateError('当前Dayfl对象包含无效的日期时间');
+    }
+    switch (type) {
+      case DateLocationEnum.year:
+        _datetime = DateTime(year, 1, 1, 0, 0, 0, 0);
+        break;
+      case DateLocationEnum.month:
+        _datetime = DateTime(year, month, 1, 0, 0, 0, 0);
+        break;
+      case DateLocationEnum.day:
+        _datetime = DateTime(year, month, day, 0, 0, 0, 0);
+        break;
+      case DateLocationEnum.hour:
+        _datetime = DateTime(year, month, day, hour, 0, 0, 0);
+        break;
+      case DateLocationEnum.minute:
+        _datetime = DateTime(year, month, day, hour, minute, 0, 0);
+        break;
+      case DateLocationEnum.sec:
+        _datetime = DateTime(year, month, day, hour, minute, second, 0);
+        break;
+      default:
+        break;
+    }
+    _init();
+    return this;
+  }
+
   /// Manipulate the Dayfl object to the end of a unit of time.
   Dayfl endOf(DateLocationEnum type) {
     if (_datetime == null) {
