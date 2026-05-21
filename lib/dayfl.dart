@@ -527,6 +527,95 @@ class Dayfl {
     return _datetime!.compareTo(targetDateTime);
   }
 
+  /// 是否在 [a] 和 [b] 之间（不包含端点）
+  ///
+  /// [a] [b] 接收 Dayfl | DateTime | String
+  /// [inclusive] 是否包含端点，默认 false
+  bool isBetween(var a, var b, {bool inclusive = false}) {
+    if (_datetime == null) return false;
+    DateTime? da = _tryExtractDateTime(a);
+    DateTime? db = _tryExtractDateTime(b);
+    if (da == null || db == null) return false;
+    if (inclusive) {
+      return (!_datetime!.isBefore(da) && !_datetime!.isAfter(db)) ||
+          (!_datetime!.isBefore(db) && !_datetime!.isAfter(da));
+    }
+    return (_datetime!.isAfter(da) && _datetime!.isBefore(db)) ||
+        (_datetime!.isAfter(db) && _datetime!.isBefore(da));
+  }
+
+  /// 是否在 [date] 之前或相同
+  bool isSameOrBefore(var date, [DateLocationEnum type = DateLocationEnum.millisecondsSinceEpoch]) {
+    if (_datetime == null) return false;
+    if (date is! Dayfl) date = Dayfl(date);
+    if (type == DateLocationEnum.millisecondsSinceEpoch) {
+      return _datetime!.isBefore(date.dateTime!) || _datetime == date.dateTime;
+    }
+    // 带单位精度：用 startOf 比较
+    final a = Dayfl(_datetime!).startOf(type);
+    final b = Dayfl(date.dateTime!).startOf(type);
+    return a.valueOf == b.valueOf || a.isBefore(b);
+  }
+
+  /// 是否在 [date] 之后或相同
+  bool isSameOrAfter(var date, [DateLocationEnum type = DateLocationEnum.millisecondsSinceEpoch]) {
+    if (_datetime == null) return false;
+    if (date is! Dayfl) date = Dayfl(date);
+    if (type == DateLocationEnum.millisecondsSinceEpoch) {
+      return _datetime!.isAfter(date.dateTime!) || _datetime == date.dateTime;
+    }
+    final a = Dayfl(_datetime!).startOf(type);
+    final b = Dayfl(date.dateTime!).startOf(type);
+    return a.valueOf == b.valueOf || a.isAfter(b);
+  }
+
+  /// 通用 getter，按单位获取值
+  int get(DateLocationEnum unit) {
+    switch (unit) {
+      case DateLocationEnum.year: return year;
+      case DateLocationEnum.month: return month;
+      case DateLocationEnum.day: return day;
+      case DateLocationEnum.hour: return hour;
+      case DateLocationEnum.minute: return minute;
+      case DateLocationEnum.sec: return second;
+      case DateLocationEnum.millisecondsSinceEpoch: return valueOf!;
+      default: return 0;
+    }
+  }
+
+  /// 通用 setter，按单位设置值
+  Dayfl set(DateLocationEnum unit, int value) {
+    switch (unit) {
+      case DateLocationEnum.year: year = value; break;
+      case DateLocationEnum.month: month = value; break;
+      case DateLocationEnum.day: day = value; break;
+      case DateLocationEnum.hour: hour = value; break;
+      case DateLocationEnum.minute: minute = value; break;
+      case DateLocationEnum.sec: second = value; break;
+      default: break;
+    }
+    return this;
+  }
+
+  /// 秒级 Unix 时间戳
+  int? unix() => _datetime?.millisecondsSinceEpoch != null
+      ? (_datetime!.millisecondsSinceEpoch / 1000).floor()
+      : null;
+
+  /// ISO 8601 字符串
+  String? toISOString() => _datetime?.toIso8601String();
+
+  /// 日期是否有效
+  bool isValid() => _datetime != null;
+
+  /// 辅助方法：安全提取 DateTime，失败返回 null
+  DateTime? _tryExtractDateTime(var date) {
+    if (date is Dayfl) return date.dateTime;
+    if (date is DateTime) return date;
+    if (date is String) return _convertToSafeDateTime(date);
+    return null;
+  }
+
   /// 类型推断
   void _object(var datetime, [String formatStr = '']) {
     try {

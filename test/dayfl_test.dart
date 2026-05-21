@@ -1198,4 +1198,142 @@ void main() {
       expect(d.getLocale().name, equals('en'));
     });
   });
+
+  // ═══════════════════════════════════════════════
+  // 21. isBetween / isSameOrBefore / isSameOrAfter
+  // ═══════════════════════════════════════════════
+  group('isBetween', () {
+    test('isBetween exclusive', () {
+      final d = Dayfl('2023-06-15');
+      expect(d.isBetween(Dayfl('2023-06-01'), Dayfl('2023-06-30')), isTrue);
+      expect(d.isBetween(Dayfl('2023-06-15'), Dayfl('2023-06-30')), isFalse);
+      expect(d.isBetween(Dayfl('2023-06-01'), Dayfl('2023-06-15')), isFalse);
+    });
+
+    test('isBetween inclusive', () {
+      final d = Dayfl('2023-06-15');
+      expect(d.isBetween(Dayfl('2023-06-01'), Dayfl('2023-06-30'), inclusive: true), isTrue);
+      expect(d.isBetween(Dayfl('2023-06-15'), Dayfl('2023-06-30'), inclusive: true), isTrue);
+      expect(d.isBetween(Dayfl('2023-06-01'), Dayfl('2023-06-15'), inclusive: true), isTrue);
+    });
+
+    test('isBetween reversed order', () {
+      final d = Dayfl('2023-06-15');
+      expect(d.isBetween(Dayfl('2023-06-30'), Dayfl('2023-06-01')), isTrue);
+    });
+
+    test('isBetween with strings', () {
+      final d = Dayfl('2023-06-15');
+      expect(d.isBetween('2023-06-01', '2023-06-30'), isTrue);
+    });
+  });
+
+  group('isSameOrBefore', () {
+    test('same date', () {
+      final a = Dayfl('2023-06-15');
+      final b = Dayfl('2023-06-15');
+      expect(a.isSameOrBefore(b), isTrue);
+    });
+
+    test('before', () {
+      final a = Dayfl('2023-06-14');
+      final b = Dayfl('2023-06-15');
+      expect(a.isSameOrBefore(b), isTrue);
+    });
+
+    test('after', () {
+      final a = Dayfl('2023-06-16');
+      final b = Dayfl('2023-06-15');
+      expect(a.isSameOrBefore(b), isFalse);
+    });
+
+    test('same month different day', () {
+      final a = Dayfl('2023-06-15');
+      final b = Dayfl('2023-06-20');
+      expect(a.isSameOrBefore(b, DateLocationEnum.month), isTrue);
+    });
+  });
+
+  group('isSameOrAfter', () {
+    test('same date', () {
+      final a = Dayfl('2023-06-15');
+      final b = Dayfl('2023-06-15');
+      expect(a.isSameOrAfter(b), isTrue);
+    });
+
+    test('after', () {
+      final a = Dayfl('2023-06-16');
+      final b = Dayfl('2023-06-15');
+      expect(a.isSameOrAfter(b), isTrue);
+    });
+
+    test('before', () {
+      final a = Dayfl('2023-06-14');
+      final b = Dayfl('2023-06-15');
+      expect(a.isSameOrAfter(b), isFalse);
+    });
+
+    test('same year different month', () {
+      final a = Dayfl('2023-12-15');
+      final b = Dayfl('2023-06-15');
+      expect(a.isSameOrAfter(b, DateLocationEnum.year), isTrue);
+    });
+  });
+
+  // ═══════════════════════════════════════════════
+  // 22. get() / set() 通用方法
+  // ═══════════════════════════════════════════════
+  group('get() / set()', () {
+    test('get by unit', () {
+      final d = Dayfl('2023-06-15 14:30:45');
+      expect(d.get(DateLocationEnum.year), equals(2023));
+      expect(d.get(DateLocationEnum.month), equals(6));
+      expect(d.get(DateLocationEnum.day), equals(15));
+      expect(d.get(DateLocationEnum.hour), equals(14));
+      expect(d.get(DateLocationEnum.minute), equals(30));
+      expect(d.get(DateLocationEnum.sec), equals(45));
+    });
+
+    test('set by unit', () {
+      final d = Dayfl('2023-06-15 14:30:45');
+      d.set(DateLocationEnum.year, 2025);
+      expect(d.year, equals(2025));
+      d.set(DateLocationEnum.month, 12);
+      expect(d.month, equals(12));
+      d.set(DateLocationEnum.day, 25);
+      expect(d.day, equals(25));
+    });
+
+    test('set is chainable', () {
+      final d = Dayfl('2023-06-15');
+      d.set(DateLocationEnum.year, 2025).set(DateLocationEnum.month, 1);
+      expect(d.year, equals(2025));
+      expect(d.month, equals(1));
+    });
+  });
+
+  // ═══════════════════════════════════════════════
+  // 23. unix() / toISOString() / isValid()
+  // ═══════════════════════════════════════════════
+  group('unix / toISOString / isValid', () {
+    test('unix returns seconds timestamp', () {
+      final d = Dayfl('2023-06-15 12:00:00', 'YYYY-MM-DD HH:mm:ss');
+      expect(d.unix(), equals(d.dateTime!.millisecondsSinceEpoch ~/ 1000));
+    });
+
+    test('toISOString returns ISO 8601', () {
+      final d = Dayfl('2023-06-15 12:00:00', 'YYYY-MM-DD HH:mm:ss');
+      expect(d.toISOString(), equals(d.dateTime!.toIso8601String()));
+    });
+
+    test('isValid returns true for valid date', () {
+      final d = Dayfl('2023-06-15');
+      expect(d.isValid(), isTrue);
+    });
+
+    test('isValid returns true for current time', () {
+      final d = Dayfl();
+      expect(d.isValid(), isTrue);
+    });
+  });
 }
