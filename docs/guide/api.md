@@ -151,8 +151,8 @@ d.setLocale = 'en';
 d.format('YYYY-MMM-DD', 'en');  // "2024-January-15"
 d.format('YYYY-MMM-DD', 'cn');  // "2024-一月-15"
 
-// 获取当前语言的周信息
-Map weekInfo = d.getWeek('en');  // {'num': 1, 'text': 'Monday'}
+// 获取当前语言的周信息（num=星期几数字1-7，text=星期几名称）
+Map weekInfo = d.getWeek('en');  // {'num': 6, 'text': 'Saturday'}
 ```
 
 ## 扩展机制

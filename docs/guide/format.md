@@ -28,13 +28,14 @@
 ```dart
 final d = Dayfl('2024-03-09 14:05:08');
 
-d.format('YYYY-MM-DD');           // 2024-03-09
-d.format('YY/M/D');               // 24/3/9
-d.format('HH:mm:ss');             // 14:05:08
-d.format('h:mm A');               // 2:05 PM
-d.format('YYYY年MM月DD日');        // 2024年03月09日
-d.format('MM/DD HH:mm');          // 03/09 14:05
-d.format('YYYY-MM-DD HH:mm:ss.SSS'); // 2024-03-09 14:05:08.000
-d.format('WW', 'en');             // Saturday
-d.format('MMM', 'en');            // March
+d.format('YYYY-MM-DD');                    // 2024-03-09
+d.format('YY/M/D');                        // 24/3/9
+d.format('HH:mm:ss');                      // 14:05:08
+d.format('h:mm A');                        // 2:05 PM
+d.format('YYYY年MM月DD日');                 // 2024年03月09日
+d.format('MM/DD HH:mm');                   // 03/09 14:05
+d.format('YYYY-MM-DD HH:mm:ss.SSS');       // 2024-03-09 14:05:08.000
+d.format('WW', 'en');                      // Saturday（星期六）
+d.format('MMM', 'en');                     // March（三月缩写）
+d.format('YYYY-MMM-WW', 'en');             // 2024-March-Saturday
 ```
