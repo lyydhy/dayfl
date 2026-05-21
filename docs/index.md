@@ -1,0 +1,29 @@
+---
+layout: home
+
+hero:
+  name: Dayfl
+  text: 纯 Dart 日期格式化库
+  tagline: 灵感来源于 Day.js，零依赖，跨平台
+  actions:
+    - theme: brand
+      text: 快速开始
+      link: /guide/getting-started
+    - theme: alt
+      text: GitHub
+      link: https://github.com/lyydhy/dayfl
+
+features:
+  - icon: 🎯
+    title: 纯 Dart 实现
+    details: 无需原生平台依赖，支持 iOS、Android、Web、Windows、macOS、Linux
+  - icon: ⚡
+    title: 零依赖
+    details: 无第三方依赖，保持轻量级特性
+  - icon: 🌍
+    title: 多语言支持
+    details: 内置中文和英文语言包，支持自定义扩展
+  - icon: 🔧
+    title: 丰富的 API
+    details: 日期解析、格式化、比较、加减运算，满足各种场景需求
+---
